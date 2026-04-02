@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Z&A Games ゲームストア</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary:   #1b2838;
+      --bg-secondary: #2a475e;
+      --bg-card:      #16202d;
+      --bg-nav:       #171a21;
+      --bg-tab:       #1e3a52;
+      --accent:       #1a9fff;
+      --accent-light: #66c0f4;
+      --text-main:    #c6d4df;
+      --text-dim:     #7a99b0;
+      --text-white:   #ffffff;
+      --border:       #3d5a70;
+      --green:        #5ba32b;
+      --green-light:  #beee11;
+      --red:          #e0271c;
+      --tag-bg:       #2a475e;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-main);
+      font-family: "Motiva Sans", "Noto Sans JP", Arial, sans-serif;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    header {
+      background: var(--bg-nav);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 60px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-white);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .logo span { color: var(--accent-light); }
+
+    .search-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: #316282;
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .search-wrap input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-white);
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    .search-wrap input::placeholder { color: #7e9bb5; }
+    .search-btn {
+      background: #5c7e99;
+      border: none;
+      cursor: pointer;
+      padding: 8px 14px;
+      color: var(--text-white);
+      font-size: 16px;
+      transition: background .2s;
+    }
+    .search-btn:hover { background: var(--accent); }
+
+    .header-links {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+    .header-links a:hover { color: var(--text-white); }
+
+    /* ─── NAV TABS ───────────────────────────────────────── */
+    .nav-bar {
+      background: var(--bg-secondary);
+      border-bottom: 2px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+    }
+    .nav-tab {
+      padding: 13px 22px;
+      font-size: 13px;
+      color: var(--text-dim);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color .2s, border-color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text-white); background: rgba(255,255,255,.04); }
+    .nav-tab.active {
+      color: var(--text-white);
+      border-bottom-color: var(--accent-light);
+      background: rgba(102,192,244,.08);
+    }
+
+    /* ─── MAIN CONTENT ───────────────────────────────────── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+
+    /* ─── SECTION TITLE ──────────────────────────────────── */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 16px;
+      padding-left: 4px;
+      border-left: 4px solid var(--accent);
+      padding-left: 10px;
+    }
+
+    /* ─── FEATURED CAROUSEL ──────────────────────────────── */
+    .featured-wrap {
+      position: relative;
+      margin-bottom: 48px;
+    }
+    .carousel {
+      overflow: hidden;
+      border-radius: 6px;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform .4s cubic-bezier(.4,0,.2,1);
+    }
+    .carousel-item {
+      min-width: 100%;
+      position: relative;
+      cursor: pointer;
+    }
+    .carousel-img {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      display: block;
+      background: var(--bg-card);
+    }
+    /* placeholder gradient images */
+    .carousel-item:nth-child(1) .carousel-img { background: linear-gradient(135deg,#1a3a6b 0%,#0e2340 50%,#2d1b69 100%); }
+    .carousel-item:nth-child(2) .carousel-img { background: linear-gradient(135deg,#3d1a1a 0%,#6b1a1a 50%,#2a0a0a 100%); }
+    .carousel-item:nth-child(3) .carousel-img { background: linear-gradient(135deg,#1a4a1a 0%,#0a2a0a 50%,#1a6b3a 100%); }
+    .carousel-item:nth-child(4) .carousel-img { background: linear-gradient(135deg,#3a2a0a 0%,#6b4a0a 50%,#2a1a00 100%); }
+    .carousel-item:nth-child(5) .carousel-img { background: linear-gradient(135deg,#1a1a4a 0%,#2a0a6b 50%,#0a1a3a 100%); }
+
+    .carousel-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .carousel-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,.85));
+      padding: 40px 24px 20px;
+    }
+    .carousel-game-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,.8);
+    }
+    .carousel-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .tag {
+      background: rgba(102,192,244,.2);
+      border: 1px solid rgba(102,192,244,.3);
+      color: var(--accent-light);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+    .carousel-price {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .price-orig {
+      color: var(--text-dim);
+      text-decoration: line-through;
+      font-size: 13px;
+    }
+    .price-discount {
+      background: #4c6b22;
+      color: var(--green-light);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+    .price-final {
+      color: var(--green-light);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* carousel arrows */
+    .car-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #fff;
+      width: 44px;
+      height: 80px;
+      cursor: pointer;
+      font-size: 22px;
+      border-radius: 4px;
+      z-index: 10;
+      transition: background .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .car-btn:hover { background: rgba(26,159,255,.7); }
+    .car-btn.prev { left: -22px; }
+    .car-btn.next { right: -22px; }
+
+    /* carousel dots */
+    .car-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .car-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .car-dot.active { background: var(--accent-light); transform: scale(1.3); }
+
+    /* ─── CATEGORIES ─────────────────────────────────────── */
+    .categories-section { margin-bottom: 48px; }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+    .cat-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 16px;
+      text-align: center;
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background .2s, color .2s, border-color .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .cat-item:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .cat-icon { font-size: 18px; }
+
+    /* ─── GAME LIST TABS ─────────────────────────────────── */
+    .list-section { margin-bottom: 48px; }
+    .list-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .list-tab {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dim);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color .2s, border-color .2s;
+    }
+    .list-tab:hover { color: var(--text-white); }
+    .list-tab.active {
+      color: var(--accent-light);
+      border-bottom-color: var(--accent-light);
+    }
+
+    .list-panel { display: none; }
+    .list-panel.active { display: flex; flex-direction: column; gap: 14px; }
+
+    .game-row {
+      display: flex;
+      gap: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .game-row:hover {
+      border-color: var(--accent-light);
+      box-shadow: 0 4px 16px rgba(102,192,244,.15);
+    }
+    .game-row-img {
+      width: 200px;
+      min-height: 100px;
+      flex-shrink: 0;
+      object-fit: cover;
+      display: block;
+    }
+    /* colour placeholder per game */
+    .game-row-img.g1  { background: linear-gradient(135deg,#1a3a6b,#2d1b69); }
+    .game-row-img.g2  { background: linear-gradient(135deg,#6b1a1a,#2a0a0a); }
+    .game-row-img.g3  { background: linear-gradient(135deg,#1a4a1a,#1a6b3a); }
+    .game-row-img.g4  { background: linear-gradient(135deg,#6b4a0a,#2a1a00); }
+    .game-row-img.g5  { background: linear-gradient(135deg,#2a0a6b,#0a1a3a); }
+    .game-row-img.g6  { background: linear-gradient(135deg,#4a1a4a,#1a0a2a); }
+    .game-row-img.g7  { background: linear-gradient(135deg,#1a4a4a,#0a2a3a); }
+    .game-row-img.g8  { background: linear-gradient(135deg,#3a3a1a,#2a2a0a); }
+    .game-row-img.g9  { background: linear-gradient(135deg,#4a1a1a,#2a0a0a); }
+    .game-row-img.g10 { background: linear-gradient(135deg,#1a1a4a,#0a0a2a); }
+    .game-row-img.g11 { background: linear-gradient(135deg,#1a3a1a,#0a2a0a); }
+    .game-row-img.g12 { background: linear-gradient(135deg,#4a3a1a,#3a2a0a); }
+
+    .game-img-label {
+      width: 200px;
+      min-height: 100px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .game-row-body {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .game-row-top {}
+    .game-row-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 6px;
+    }
+    .game-row-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .game-row-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .game-row-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .review-score {
+      font-size: 12px;
+    }
+    .review-pos { color: #66c0f4; }
+    .review-mix { color: #b9a074; }
+    .review-neg { color: var(--red); }
+
+    .price-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .price-free {
+      background: #5ba32b;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 3px;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      background: var(--bg-nav);
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 12px;
+      line-height: 2;
+    }
+    footer a { color: var(--accent-light); margin: 0 10px; }
+    footer a:hover { color: #fff; }
+
+    /* ─── SCROLL TO TOP ──────────────────────────────────── */
+    #scrollTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.4);
+      transition: background .2s, transform .2s;
+      z-index: 200;
+    }
+    #scrollTop:hover { background: var(--accent-light); transform: translateY(-3px); }
+    #scrollTop.visible { display: flex; }
+
+    /* ─── ANCHOR SECTIONS ────────────────────────────────── */
+    .anchor-target { scroll-margin-top: 110px; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">Z<span>&amp;A</span> Games</div>
+
+    <div class="search-wrap">
+      <input type="text" placeholder="ゲームやDLCを検索…" id="searchInput" />
+      <button class="search-btn" onclick="doSearch()">🔍</button>
+    </div>
+
+    <div class="header-links">
+      <a href="Login.html" id="portalLoginLink">ログイン</a>
+      <a href="Login.html">アカウント作成</a>
+      <a href="Mypage.html" id="portalWishlistLink">ウィッシュリスト</a>
+      <a href="#">カート 🛒</a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ NAV TABS ══════════ -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-tab active" onclick="switchNav(this,'#home-anchor')">🏠 ホーム</div>
+    <div class="nav-tab" onclick="switchNav(this,'#home-anchor')">📜 閲覧履歴</div>
+    <div class="nav-tab" onclick="switchNav(this,'#featured-anchor')">⭐ おすすめ</div>
+    <div class="nav-tab" onclick="switchNav(this,'#categories-anchor')">🗂 カテゴリ</div>
+    <div class="nav-tab" onclick="location.href='support.html'">🆘 サポート</div>
+  </div>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main">
+
+  <div id="home-anchor" class="anchor-target"></div>
+
+  <!-- ── FEATURED CAROUSEL ── -->
+  <div id="featured-anchor" class="anchor-target"></div>
+  <section class="featured-wrap">
+    <div class="section-title">⭐ 注目おすすめ</div>
+
+    <div class="carousel">
+      <div class="carousel-track" id="track">
+
+        <!-- SLIDE 1 -->
+        <div class="carousel-item">
+          <div class="carousel-img"></div>
+          <span class="carousel-badge">注目</span>
+          <div class="carousel-info">
+            <div class="carousel-game-title">Galaxy Odyssey: Beyond the Void</div>
+            <div class="carousel-tags">
+              <span class="tag">RPG</span><span class="tag">オープンワールド</span><span class="tag">SF</span><span class="tag">マルチプレイヤー</span>
+            </div>
+            <div class="carousel-price">
+              <span class="price-discount">-40%</span>
+              <span class="price-orig">¥7,800</span>
+              <span class="price-final">¥4,680</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="carousel-item">
+          <div class="carousel-img"></div>
+          <span class="carousel-badge">新着</span>
+          <div class="carousel-info">
+            <div class="carousel-game-title">Crimson Depths: Reborn</div>
+            <div class="carousel-tags">
+              <span class="tag">アクション</span><span class="tag">ホラー</span><span class="tag">サバイバル</span>
+            </div>
+            <div class="carousel-price">
+              <span class="price-discount">-20%</span>
+              <span class="price-orig">¥5,200</span>
+              <span class="price-final">¥4,160</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="carousel-item">
+          <div class="carousel-img"></div>
+          <span class="carousel-badge">週末セール</span>
+          <div class="carousel-info">
+            <div class="carousel-game-title">Emerald Kingdom Chronicles</div>
+            <div class="carousel-tags">
+              <span class="tag">ストラテジー</span><span class="tag">シミュレーション</span><span class="tag">歴史</span>
+            </div>
+            <div class="carousel-price">
+              <span class="price-discount">-60%</span>
+              <span class="price-orig">¥6,500</span>
+              <span class="price-final">¥2,600</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4 -->
+        <div class="carousel-item">
+          <div class="carousel-img"></div>
+          <span class="carousel-badge">人気</span>
+          <div class="carousel-info">
+            <div class="carousel-game-title">Desert Storm: Tactical Ops</div>
+            <div class="carousel-tags">
+              <span class="tag">シューター</span><span class="tag">戦術</span><span class="tag">マルチプレイヤー</span>
+            </div>
+            <div class="carousel-price">
+              <span class="price-final">¥3,980</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5 -->
+        <div class="carousel-item">
+          <div class="carousel-img"></div>
+          <span class="carousel-badge">エディターズチョイス</span>
+          <div class="carousel-info">
+            <div class="carousel-game-title">Neon Abyss: Director's Cut</div>
+            <div class="carousel-tags">
+              <span class="tag">ローグライク</span><span class="tag">インディー</span><span class="tag">アドベンチャー</span>
+            </div>
+            <div class="carousel-price">
+              <span class="price-discount">-75%</span>
+              <span class="price-orig">¥2,980</span>
+              <span class="price-final">¥745</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /track -->
+    </div><!-- /carousel -->
+
+    <button class="car-btn prev" id="prevBtn">&#8249;</button>
+    <button class="car-btn next" id="nextBtn">&#8250;</button>
+
+    <div class="car-dots" id="dots"></div>
+  </section>
+
+  <!-- ── CATEGORIES ── -->
+  <div id="categories-anchor" class="anchor-target"></div>
+  <section class="categories-section">
+    <div class="section-title">🗂 カテゴリ</div>
+    <div class="cat-grid">
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🎮</span>アクション</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">⚔️</span>RPG</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🏰</span>ストラテジー</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🧩</span>パズル</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🎯</span>シューター</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🚀</span>SF</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">👻</span>ホラー</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🌍</span>オープンワールド</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🏎️</span>レーシング</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">⚽</span>スポーツ</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🏗️</span>シミュレーション</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🎭</span>アドベンチャー</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🎵</span>音楽リズム</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">🃏</span>カード・ボード</div>
+      <div class="cat-item" onclick="jumpTo('#new-releases')"><span class="cat-icon">💡</span>インディー</div>
+      <div class="cat-item" onclick="jumpTo('#free-to-play')"><span class="cat-icon">🆓</span>無料プレイ</div>
+    </div>
+  </section>
+
+  <!-- ── GAME LIST (TABS) ── -->
+  <div id="new-releases" class="anchor-target"></div>
+  <section class="list-section">
+    <div class="section-title">🎮 ゲーム一覧</div>
+    <div class="list-tabs">
+      <div class="list-tab active" onclick="switchListTab(this,'panel-new')">🆕 新作</div>
+      <div class="list-tab" onclick="switchListTab(this,'panel-top')">🏆 売上トップ</div>
+      <div class="list-tab" onclick="switchListTab(this,'panel-free')" id="free-to-play">🆓 無料作品</div>
+    </div>
+
+    <!-- ── 新作 ── -->
+    <div id="panel-new" class="list-panel active">
+
+      <div class="game-row">
+        <div class="game-img-label g1" style="background:linear-gradient(135deg,#1a3a6b,#2d1b69)">🚀</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Starfall Protocol</div>
+            <div class="game-row-desc">広大な宇宙を舞台にした本格SF RPG。プレイヤーは銀河系最後の守護者として、謎の侵略者から人類を救う壮大な冒険に挑む。高自由度のカスタマイズと没入感あふれるストーリーが特徴。</div>
+            <div class="game-row-tags"><span class="tag">RPG</span><span class="tag">SF</span><span class="tag">オープンワールド</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 非常に好評 (94%)</span>
+            <div class="price-box"><span class="price-discount">-15%</span><span class="price-orig">¥6,800</span><span class="price-final">¥5,780</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g2" style="background:linear-gradient(135deg,#6b1a1a,#2a0a0a)">🗡️</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Shadow Blade: Undying Legacy</div>
+            <div class="game-row-desc">暗闇を駆ける忍者アクションゲーム。超高速コンボと精密なステルスを組み合わせて敵を倒せ。豊富なスキルツリーで自分だけの戦闘スタイルを構築できる。</div>
+            <div class="game-row-tags"><span class="tag">アクション</span><span class="tag">ステルス</span><span class="tag">和風</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 好評 (82%)</span>
+            <div class="price-box"><span class="price-final">¥4,280</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g3" style="background:linear-gradient(135deg,#1a4a1a,#1a6b3a)">🌿</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">EcoVille: Green Horizon</div>
+            <div class="game-row-desc">環境問題をテーマにした都市建設シミュレーション。持続可能なエネルギーと自然との調和を保ちながら、理想の都市を作り上げよう。チュートリアルが充実しており初心者にも安心。</div>
+            <div class="game-row-tags"><span class="tag">シミュレーション</span><span class="tag">建設</span><span class="tag">カジュアル</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 非常に好評 (91%)</span>
+            <div class="price-box"><span class="price-discount">-10%</span><span class="price-orig">¥3,200</span><span class="price-final">¥2,880</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g4" style="background:linear-gradient(135deg,#6b4a0a,#2a1a00)">🏜️</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Sandstorm Racer X</div>
+            <div class="game-row-desc">荒廃した未来の砂漠を舞台にした爆速レーシングゲーム。カスタマイズ可能な車両と動的な天候システムが臨場感を演出。オンラインランキングでライバルと競え。</div>
+            <div class="game-row-tags"><span class="tag">レーシング</span><span class="tag">SF</span><span class="tag">マルチプレイヤー</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-mix">😐 賛否両論 (62%)</span>
+            <div class="price-box"><span class="price-final">¥2,480</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-new -->
+
+    <!-- ── 売上トップ ── -->
+    <div id="panel-top" class="list-panel">
+
+      <div class="game-row">
+        <div class="game-img-label g5" style="background:linear-gradient(135deg,#2a0a6b,#0a1a3a)">🏆</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Legends of Eternity Online</div>
+            <div class="game-row-desc">全世界1,000万人が熱狂するMMORPG。200以上のクラスと無限に広がるコンテンツ。毎月大型アップデートを実施中。数百時間楽しめる圧倒的ボリュームと奥深い世界観が魅力。</div>
+            <div class="game-row-tags"><span class="tag">MMORPG</span><span class="tag">オンライン</span><span class="tag">ファンタジー</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 圧倒的に好評 (97%)</span>
+            <div class="price-box"><span class="price-discount">-50%</span><span class="price-orig">¥8,800</span><span class="price-final">¥4,400</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g6" style="background:linear-gradient(135deg,#4a1a4a,#1a0a2a)">🔫</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Phantom Strike: Warzone</div>
+            <div class="game-row-desc">本格タクティカルシューター。戦略的な連携プレーが勝敗を分ける5v5の緊張感あるバトル。プロシーンでも採用される精密な弾道計算と豊富な武器カスタマイズが人気の秘密。</div>
+            <div class="game-row-tags"><span class="tag">シューター</span><span class="tag">戦術</span><span class="tag">マルチプレイヤー</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 非常に好評 (89%)</span>
+            <div class="price-box"><span class="price-final">¥3,480</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g7" style="background:linear-gradient(135deg,#1a4a4a,#0a2a3a)">🧩</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Mind Maze: The Infinite Puzzle</div>
+            <div class="game-row-desc">独創的な物理演算パズルゲーム。1,000以上の手作りステージと無限生成モードで飽きることなく遊べる。世界中のプレイヤーが作ったステージをダウンロードして挑戦しよう。</div>
+            <div class="game-row-tags"><span class="tag">パズル</span><span class="tag">インディー</span><span class="tag">カジュアル</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 非常に好評 (95%)</span>
+            <div class="price-box"><span class="price-discount">-30%</span><span class="price-orig">¥1,500</span><span class="price-final">¥1,050</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g8" style="background:linear-gradient(135deg,#3a3a1a,#2a2a0a)">⚔️</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Kingdom Fall: Age of Conquest</div>
+            <div class="game-row-desc">中世ヨーロッパを舞台にした本格リアルタイムストラテジー。複雑な政治外交と大規模な軍事戦略が絡み合う。AIの難易度が高く、上級者でも満足できる歯ごたえのある作品。</div>
+            <div class="game-row-tags"><span class="tag">ストラテジー</span><span class="tag">歴史</span><span class="tag">シングル</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 好評 (78%)</span>
+            <div class="price-box"><span class="price-discount">-25%</span><span class="price-orig">¥5,600</span><span class="price-final">¥4,200</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-top -->
+
+    <!-- ── 無料作品 ── -->
+    <div id="panel-free" class="list-panel">
+
+      <div class="game-row">
+        <div class="game-img-label g9" style="background:linear-gradient(135deg,#4a1a1a,#2a0a0a)">🐉</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Dragon Realm: Rise of Heroes</div>
+            <div class="game-row-desc">基本プレイ無料のファンタジーMMO。ドラゴンを仲間にして壮大な冒険の旅へ。毎週更新されるクエストと季節イベントで常に新鮮なコンテンツをお届け。課金なしでもメインストーリーはすべてプレイ可能。</div>
+            <div class="game-row-tags"><span class="tag">MMO</span><span class="tag">ファンタジー</span><span class="tag">基本無料</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 非常に好評 (87%)</span>
+            <div class="price-box"><span class="price-free">無料でプレイ</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g10" style="background:linear-gradient(135deg,#1a1a4a,#0a0a2a)">🌌</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Void Runners: Battle Royale</div>
+            <div class="game-row-desc">宇宙を舞台にした100人バトルロイヤル。重力ゼロの独特な戦闘と豊富な乗り物がゲームを盛り上げる。シーズン制で定期的に新マップと新キャラクターが追加される。</div>
+            <div class="game-row-tags"><span class="tag">バトルロイヤル</span><span class="tag">SF</span><span class="tag">マルチプレイヤー</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 好評 (83%)</span>
+            <div class="price-box"><span class="price-free">無料でプレイ</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g11" style="background:linear-gradient(135deg,#1a3a1a,#0a2a0a)">🌿</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Farm & Friends Online</div>
+            <div class="game-row-desc">のんびり農場経営シミュレーション。フレンドと協力して大きな農場を育てよう。季節ごとに変わる作物や祭りイベントが楽しい、癒し系ゲームの定番。広告なし・無課金でフルに楽しめる。</div>
+            <div class="game-row-tags"><span class="tag">シミュレーション</span><span class="tag">カジュアル</span><span class="tag">協力</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 圧倒的に好評 (96%)</span>
+            <div class="price-box"><span class="price-free">無料でプレイ</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-row">
+        <div class="game-img-label g12" style="background:linear-gradient(135deg,#4a3a1a,#3a2a0a)">🎴</div>
+        <div class="game-row-body">
+          <div class="game-row-top">
+            <div class="game-row-title">Rune Card Chronicles</div>
+            <div class="game-row-desc">本格デジタルカードゲーム。500種類以上のカードでデッキを組み上げ、世界中のプレイヤーと対戦。日替わりチャレンジと週次トーナメントで報酬を獲得しよう。初心者向けチュートリアルが充実。</div>
+            <div class="game-row-tags"><span class="tag">カードゲーム</span><span class="tag">ストラテジー</span><span class="tag">マルチプレイヤー</span></div>
+          </div>
+          <div class="game-row-bottom">
+            <span class="review-score review-pos">👍 好評 (80%)</span>
+            <div class="price-box"><span class="price-free">無料でプレイ</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-free -->
+
+  </section>
+
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <p>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">利用規約</a>
+    <a href="#">Steamサブスクリプション契約</a>
+    <a href="#">返金ポリシー</a>
+    <a href="#">クッキー設定</a>
+  </p>
+  <p style="margin-top:10px;">
+    &copy; 2026 Steam Store — サンプルページ（架空コンテンツ）
+  </p>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  /* ── CAROUSEL ── */
+  const track   = document.getElementById('track');
+  const slides  = track.children;
+  const total   = slides.length;
+  const dotsEl  = document.getElementById('dots');
+  let cur = 0, timer;
+
+  // build dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'car-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    cur = (n + total) % total;
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    document.querySelectorAll('.car-dot').forEach((d, i) =>
+      d.classList.toggle('active', i === cur));
+    resetTimer();
+  }
+
+  document.getElementById('prevBtn').onclick = () => goTo(cur - 1);
+  document.getElementById('nextBtn').onclick = () => goTo(cur + 1);
+
+  // keyboard arrow support
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+  });
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(cur + 1), 5000);
+  }
+  resetTimer();
+
+  /* ── NAV TABS ── */
+  function switchNav(el, anchor) {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    if (anchor) {
+      const target = document.querySelector(anchor);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  /* ── LIST TABS ── */
+  function switchListTab(el, panelId) {
+    document.querySelectorAll('.list-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.list-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(panelId).classList.add('active');
+  }
+
+  /* ── CATEGORY JUMP ── */
+  function jumpTo(selector) {
+    const el = document.querySelector(selector);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ── SEARCH ── */
+  function doSearch() {
+    const q = document.getElementById('searchInput').value.trim();
+    if (q) alert('検索: ' + q + '\n（実際の検索機能はサーバー連携が必要です）');
+  }
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  /* ── SCROLL TO TOP ── */
+  const scrollTopBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  /* ── ログイン状態チェック ── */
+  (function() {
+    try {
+      const u = JSON.parse(sessionStorage.getItem('nexus_user'));
+      if (u && u.name) {
+        const loginLink = document.getElementById('portalLoginLink');
+        if (loginLink) {
+          loginLink.textContent = '👤 ' + u.name;
+          loginLink.href = 'Mypage.html';
+          loginLink.style.color = '#66c0f4';
+          loginLink.style.fontWeight = '600';
+        }
+        const wlLink = document.getElementById('portalWishlistLink');
+        if (wlLink) {
+          wlLink.textContent = '♡ ウィッシュリスト';
+          wlLink.href = 'Mypage.html';
+        }
+      }
+    } catch(e) {}
+  })();
+</script>
+</body>
+</html>

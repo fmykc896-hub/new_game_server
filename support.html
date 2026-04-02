@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サポート — Z&amp;A Games</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary:   #1b2838;
+  --bg-secondary: #2a475e;
+  --bg-card:      #16202d;
+  --bg-nav:       #171a21;
+  --accent:       #1a9fff;
+  --accent-light: #66c0f4;
+  --text-main:    #c6d4df;
+  --text-dim:     #7a99b0;
+  --text-white:   #ffffff;
+  --border:       #3d5a70;
+  --green:        #5ba32b;
+  --green-light:  #beee11;
+  --red:          #e0271c;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-main);
+  font-family: "Motiva Sans", "Noto Sans JP", Arial, sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ─── HEADER ─── */
+header {
+  background: var(--bg-nav);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 60px;
+}
+.logo {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text-white);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.logo span { color: var(--accent-light); }
+.header-links {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.header-links a:hover { color: var(--text-white); }
+
+/* ─── NAV BAR ─── */
+.nav-bar {
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+}
+.nav-tab {
+  padding: 13px 22px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .2s, border-color .2s, background .2s;
+  white-space: nowrap;
+  background: transparent;
+  border-left: none; border-right: none; border-top: none;
+}
+.nav-tab:hover { color: var(--text-white); background: rgba(255,255,255,.04); }
+.nav-tab.active {
+  color: var(--text-white);
+  border-bottom-color: var(--accent-light);
+  background: rgba(102,192,244,.08);
+}
+
+/* ─── MAIN ─── */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 16px 80px;
+}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+}
+.breadcrumb a { color: var(--accent-light); }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb-sep { color: var(--border); }
+
+/* ─── PAGE HERO ─── */
+.support-hero {
+  background: linear-gradient(135deg, var(--bg-card) 0%, #1a2f45 100%);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.hero-icon { font-size: 48px; flex-shrink: 0; }
+.hero-text h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 6px;
+}
+.hero-text p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.hero-search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  background: #316282;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 260px;
+  flex-shrink: 0;
+}
+.hero-search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-white);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-family: inherit;
+}
+.hero-search input::placeholder { color: #7e9bb5; }
+.hero-search button {
+  background: #5c7e99;
+  border: none;
+  padding: 9px 14px;
+  color: var(--text-white);
+  font-size: 15px;
+  transition: background .2s;
+}
+.hero-search button:hover { background: var(--accent); }
+
+/* ─── SECTION TITLE ─── */
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-bottom: 14px;
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+}
+
+/* ─── CATEGORY GRID ─── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+/* ─── SUPPORT CARD ─── */
+.support-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.support-card:hover { border-color: var(--accent-light); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+.card-header-icon { font-size: 22px; flex-shrink: 0; }
+.card-header-title {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-white);
+}
+.card-toggle {
+  font-size: 14px;
+  color: var(--text-dim);
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.support-card.open .card-toggle { transform: rotate(180deg); }
+
+.card-body {
+  display: none;
+  padding: 6px 0;
+}
+.support-card.open .card-body { display: block; }
+
+.support-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: background .15s;
+  border-bottom: 1px solid rgba(61,90,112,.3);
+}
+.support-item:last-child { border-bottom: none; }
+.support-item:hover { background: rgba(255,255,255,.04); }
+.si-arrow {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.si-label {
+  font-size: 13px;
+  color: var(--text-main);
+  transition: color .15s;
+}
+.support-item:hover .si-label { color: var(--text-white); }
+.support-item:hover .si-arrow { color: var(--accent-light); }
+
+/* ─── DETAIL PANEL ─── */
+.detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 16px;
+  overflow-y: auto;
+}
+.detail-overlay.open { display: flex; }
+
+.detail-box {
+  width: 100%;
+  max-width: 680px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.8);
+  animation: dopen .22s ease;
+}
+@keyframes dopen { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.detail-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.detail-close {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: .15s;
+}
+.detail-close:hover { background: rgba(255,255,255,.08); color: var(--text-white); }
+
+.detail-content { padding: 22px 24px; }
+
+/* Steps */
+.step-list { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-body { flex: 1; }
+.step-title { font-size: 13px; font-weight: 700; color: var(--text-white); margin-bottom: 3px; }
+.step-desc { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
+
+/* Info box */
+.info-box {
+  background: rgba(26,159,255,.08);
+  border: 1px solid rgba(26,159,255,.25);
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--accent-light);
+  line-height: 1.7;
+  margin: 14px 0;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.info-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+.warn-box {
+  background: rgba(224,39,28,.08);
+  border: 1px solid rgba(224,39,28,.25);
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #f06060;
+  line-height: 1.7;
+  margin: 14px 0;
+  display: flex;
+  gap: 10px;
+}
+
+/* Detail footer buttons */
+.detail-footer {
+  display: flex;
+  gap: 8px;
+  padding: 14px 24px 20px;
+  border-top: 1px solid rgba(61,90,112,.4);
+  margin-top: 4px;
+}
+.btn-primary {
+  flex: 1;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-primary:hover { background: #0e8de6; }
+.btn-secondary {
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 3px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .15s;
+}
+.btn-secondary:hover { border-color: var(--accent-light); color: var(--text-white); }
+
+/* ─── FAQ ─── */
+.faq-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 40px; }
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.faq-item:hover { border-color: rgba(61,90,112,.9); }
+
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  gap: 12px;
+}
+.faq-q-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  flex: 1;
+}
+.faq-item.open .faq-q-text { color: var(--accent-light); }
+.faq-arr {
+  color: var(--text-dim);
+  font-size: 12px;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.faq-item.open .faq-arr { transform: rotate(180deg); color: var(--accent-light); }
+
+.faq-a {
+  display: none;
+  padding: 0 18px 16px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  border-top: 1px solid rgba(61,90,112,.3);
+}
+.faq-a p { margin-bottom: 8px; }
+.faq-a p:last-child { margin-bottom: 0; }
+.faq-item.open .faq-a { display: block; }
+.faq-a-inner { padding-top: 12px; }
+
+/* ─── CONTACT FORM ─── */
+.contact-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 28px 32px;
+  max-width: 680px;
+}
+.contact-wrap h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 6px;
+}
+.contact-wrap > p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 22px;
+  line-height: 1.7;
+}
+
+.form-grid { display: flex; flex-direction: column; gap: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.field input,
+.field select,
+.field textarea {
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 9px 12px;
+  color: var(--text-white);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .2s;
+  width: 100%;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: var(--accent); }
+.field input::placeholder,
+.field textarea::placeholder { color: var(--text-dim); }
+.field select option { background: var(--bg-card); }
+.field textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+
+.form-submit {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+.btn-submit {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 11px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-submit:hover { background: #0e8de6; }
+.form-note { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(26,159,255,.15);
+  border: 1px solid rgba(102,192,244,.4);
+  color: var(--accent-light);
+  padding: 9px 22px;
+  border-radius: 3px;
+  font-size: 13px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity .25s;
+}
+.toast.on { opacity: 1; }
+.toast.ok { background: rgba(91,163,43,.15); border-color: rgba(91,163,43,.4); color: var(--green-light); }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-nav); }
+::-webkit-scrollbar-thumb { background: rgba(102,192,244,.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(102,192,244,.4); }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <a href="portal_index.html" class="logo">Z<span>&amp;A</span> Games</a>
+    <div class="header-links">
+      <a href="Login.html" id="hdrLoginLink">ログイン</a>
+      <a href="Login.html">アカウント作成</a>
+      <a href="Mypage.html">ウィッシュリスト</a>
+      <a href="#">カート 🛒</a>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-tab" onclick="location.href='portal_index.html'">🏠 ホーム</button>
+    <button class="nav-tab" onclick="location.href='Mypage.html'">📜 閲覧履歴</button>
+    <button class="nav-tab" onclick="location.href='portal_index.html#featured-anchor'">⭐ おすすめ</button>
+    <button class="nav-tab" onclick="location.href='portal_index.html#categories-anchor'">🗂 カテゴリ</button>
+    <button class="nav-tab active">🆘 サポート</button>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="portal_index.html">ホーム</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>サポート</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="support-hero">
+    <div class="hero-icon">🆘</div>
+    <div class="hero-text">
+      <h1>サポートセンター</h1>
+      <p>お困りの内容をカテゴリから選んでください。<br>よくある質問・フォームからのお問い合わせにも対応しています。</p>
+    </div>
+    <div class="hero-search">
+      <input type="text" id="supportSearch" placeholder="問題を検索…" onkeydown="if(event.key==='Enter')searchSupport()">
+      <button onclick="searchSupport()">🔍</button>
+    </div>
+  </div>
+
+  <!-- ══ カテゴリ ══ -->
+  <div class="section-title">お問い合わせカテゴリ</div>
+  <div class="cat-grid" id="catGrid">
+
+    <!-- 1. ゲームについて -->
+    <div class="support-card open" id="card-game">
+      <div class="card-header" onclick="toggleCard('card-game')">
+        <span class="card-header-icon">🎮</span>
+        <span class="card-header-title">1. ゲームについて</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="support-item" onclick="openDetail('game-noplay')">
+          <span class="si-label">このゲームはプレイできない</span>
+          <span class="si-arrow">›</span>
+        </div>
+        <div class="support-item" onclick="openDetail('game-techissue')">
+          <span class="si-label">プレイ中の技術的な問題</span>
+          <span class="si-arrow">›</span>
+        </div>
+        <div class="support-item" onclick="openDetail('game-remove')">
+          <span class="si-label">アカウントから削除したい</span>
+          <span class="si-arrow">›</span>
+        </div>
+        <div class="support-item" onclick="openDetail('game-nolibrary')">
+          <span class="si-label">ライブラリ内に無い</span>
+          <span class="si-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. アカウントについて -->
+    <div class="support-card" id="card-account">
+      <div class="card-header" onclick="toggleCard('card-account')">
+        <span class="card-header-icon">👤</span>
+        <span class="card-header-title">2. アカウントについて</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="support-item" onclick="openDetail('account-details')">
+          <span class="si-label">アカウント詳細（メール・電話番号・支払い方法）</span>
+          <span class="si-arrow">›</span>
+        </div>
+        <div class="support-item" onclick="openDetail('account-signin')">
+          <span class="si-label">アカウントにサインインできません</span>
+          <span class="si-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 購入について -->
+    <div class="support-card" id="card-purchase">
+      <div class="card-header" onclick="toggleCard('card-purchase')">
+        <span class="card-header-icon">💳</span>
+        <span class="card-header-title">3. 購入について</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="support-item" onclick="openDetail('purchase-failed')">
+          <span class="si-label">購入が完了できない</span>
+          <span class="si-arrow">›</span>
+        </div>
+        <div class="support-item" onclick="openDetail('purchase-unknown')">
+          <span class="si-label">不明な請求</span>
+          <span class="si-arrow">›</span>
+        </div>
+        <div class="support-item" onclick="openDetail('purchase-history')">
+          <span class="si-label">すべての購入履歴の表示</span>
+          <span class="si-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. その他問い合わせ -->
+    <div class="support-card" id="card-other">
+      <div class="card-header" onclick="toggleCard('card-other')">
+        <span class="card-header-icon">✉️</span>
+        <span class="card-header-title">5. その他のお問い合わせ</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="support-item" onclick="scrollToForm()">
+          <span class="si-label">問い合わせフォーム</span>
+          <span class="si-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ 4. よくあるFAQ ══ -->
+  <div class="section-title" id="faqSection">4. よくあるFAQ</div>
+  <div class="faq-list">
+
+    <div class="faq-item" id="faq1">
+      <div class="faq-q" onclick="toggleFaq('faq1')">
+        <span class="faq-q-text">購入したゲームがライブラリに表示されません</span>
+        <span class="faq-arr">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <p>購入直後は反映まで数分かかる場合があります。ページを更新してお待ちください。</p>
+          <p>それでも表示されない場合は、購入時に使用したアカウントでログインしているか確認してください。複数アカウントをお持ちの場合、別のアカウントで購入されている可能性があります。</p>
+          <p>解決しない場合は「ゲームについて ＞ ライブラリ内に無い」よりお問い合わせください。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq2">
+      <div class="faq-q" onclick="toggleFaq('faq2')">
+        <span class="faq-q-text">返金はできますか？</span>
+        <span class="faq-arr">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <p>購入から14日以内かつプレイ時間が2時間未満の場合、返金申請が可能です。</p>
+          <p>返金は元の支払い方法に5〜10営業日以内に処理されます。セール価格での購入・DLC・ゲーム内アイテムは返金対象外となる場合があります。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq3">
+      <div class="faq-q" onclick="toggleFaq('faq3')">
+        <span class="faq-q-text">パスワードを忘れてしまいました</span>
+        <span class="faq-arr">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <p>ログイン画面の「パスワードを忘れた場合」リンクをクリックし、登録済みのメールアドレスを入力してください。パスワードリセットメールが届きます。</p>
+          <p>メールが届かない場合は迷惑メールフォルダをご確認ください。それでも届かない場合は「アカウントについて ＞ アカウントにサインインできません」よりお問い合わせください。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq4">
+      <div class="faq-q" onclick="toggleFaq('faq4')">
+        <span class="faq-q-text">ゲームが起動しない・クラッシュする</span>
+        <span class="faq-arr">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <p>まず以下をお試しください：</p>
+          <p>① PCを再起動する　② グラフィックドライバーを最新版に更新する　③ ゲームファイルの整合性を確認する　④ ウイルス対策ソフトの除外設定を確認する</p>
+          <p>解決しない場合は「ゲームについて ＞ プレイ中の技術的な問題」よりお問い合わせください。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq5">
+      <div class="faq-q" onclick="toggleFaq('faq5')">
+        <span class="faq-q-text">支払い方法を変更したい</span>
+        <span class="faq-arr">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <p>マイページ ＞ 支払い設定 から登録済みの支払い方法の追加・削除・変更が可能です。</p>
+          <p>購入済みのサブスクリプションの支払い方法変更は、次回更新日の前日までに行ってください。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" id="faq6">
+      <div class="faq-q" onclick="toggleFaq('faq6')">
+        <span class="faq-q-text">アカウントを削除したい</span>
+        <span class="faq-arr">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <p>アカウントの削除はマイページ ＞ アカウント設定 ＞「危険な操作」セクションから申請できます。</p>
+          <p>削除後はすべての購入履歴・ゲームライブラリが失われ、復元できません。ご注意ください。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ 5. 問い合わせフォーム ══ -->
+  <div class="section-title" id="contactSection">お問い合わせフォーム</div>
+  <div class="contact-wrap" id="contactForm">
+    <h2>✉️ サポートチームに連絡する</h2>
+    <p>上記のFAQで解決しない場合は、下記フォームよりお問い合わせください。通常2〜3営業日以内に返信いたします。</p>
+
+    <div class="form-grid">
+      <div class="form-row">
+        <div class="field">
+          <label>お名前</label>
+          <input type="text" id="cName" placeholder="山田 太郎">
+        </div>
+        <div class="field">
+          <label>メールアドレス</label>
+          <input type="email" id="cEmail" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>お問い合わせカテゴリ</label>
+        <select id="cCategory">
+          <option value="">カテゴリを選択してください</option>
+          <optgroup label="ゲームについて">
+            <option value="game-noplay">このゲームはプレイできない</option>
+            <option value="game-techissue">プレイ中の技術的な問題</option>
+            <option value="game-remove">アカウントから削除したい</option>
+            <option value="game-nolibrary">ライブラリ内に無い</option>
+          </optgroup>
+          <optgroup label="アカウントについて">
+            <option value="account-details">アカウント詳細の変更</option>
+            <option value="account-signin">サインインできない</option>
+          </optgroup>
+          <optgroup label="購入について">
+            <option value="purchase-failed">購入が完了できない</option>
+            <option value="purchase-unknown">不明な請求</option>
+            <option value="purchase-history">購入履歴の確認</option>
+          </optgroup>
+          <option value="other">その他</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>件名</label>
+        <input type="text" id="cSubject" placeholder="お問い合わせの概要を簡潔にご記入ください">
+      </div>
+
+      <div class="field">
+        <label>お問い合わせ内容</label>
+        <textarea id="cBody" placeholder="発生している問題の詳細・エラーメッセージ・試した対処法などをできるだけ詳しくご記入ください。"></textarea>
+      </div>
+
+      <div class="form-submit">
+        <button class="btn-submit" onclick="submitForm()">送信する</button>
+        <p class="form-note">
+          送信後、登録メールアドレスに受付確認メールが届きます。<br>
+          個人情報は<a href="#" style="color:var(--accent-light)">プライバシーポリシー</a>に従って管理されます。
+        </p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ DETAIL PANELS ══ -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-box">
+    <div class="detail-header">
+      <div class="detail-title" id="detailTitle">詳細</div>
+      <button class="detail-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-content" id="detailContent"></div>
+    <div class="detail-footer" id="detailFooter"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Detail content definitions ──────────────────────────────
+const DETAILS = {
+
+  'game-noplay': {
+    title: '🎮 このゲームはプレイできない',
+    content: `
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px">以下の手順で問題が解決するか確認してください。</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">システム要件を確認する</div><div class="step-desc">ゲームのストアページに記載されている推奨スペックと、お使いのPCのスペックを比較してください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">ドライバーを更新する</div><div class="step-desc">グラフィックカードのドライバーを最新版に更新してください。NVIDIA / AMD 公式サイトから入手できます。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">ゲームを再インストールする</div><div class="step-desc">ゲームをアンインストールし、再度インストールしてください。ダウンロード中の破損が解消される場合があります。</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">ファイアウォール設定を確認する</div><div class="step-desc">セキュリティソフトがゲームをブロックしていないか確認してください。</div></div></div>
+      </div>
+      <div class="info-box"><span class="info-icon">ℹ️</span><span>上記で解決しない場合は、下のボタンからサポートチームに直接お問い合わせください。</span></div>`,
+    footer: `<button class="btn-primary" onclick="goToForm('game-noplay')">サポートに問い合わせる</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+  'game-techissue': {
+    title: '⚙️ プレイ中の技術的な問題',
+    content: `
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px">技術的な問題の種類を選んでください。</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">クラッシュ・フリーズ</div><div class="step-desc">PCを再起動し、バックグラウンドアプリを終了してから再度お試しください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">グラフィック・表示の問題</div><div class="step-desc">ゲーム内の画質設定を下げる、または全画面 / ウィンドウモードを切り替えてみてください。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">音声・サウンドの問題</div><div class="step-desc">Windowsのサウンド設定、オーディオドライバーを確認してください。</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">オンライン接続の問題</div><div class="step-desc">ルーターを再起動し、他のオンラインゲームで接続できるか確認してください。</div></div></div>
+      </div>`,
+    footer: `<button class="btn-primary" onclick="goToForm('game-techissue')">サポートに問い合わせる</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+  'game-remove': {
+    title: '🗑️ アカウントからゲームを削除したい',
+    content: `
+      <div class="warn-box"><span>⚠️</span><span>ゲームをアカウントから削除すると、そのゲームへのアクセス権とセーブデータが失われます。この操作は取り消せません。</span></div>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">マイページにアクセス</div><div class="step-desc">ヘッダーの「マイページ」からアカウントページに移動してください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">ライブラリから削除</div><div class="step-desc">該当ゲームを選択し「アカウントから削除」をクリックしてください。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">返金について</div><div class="step-desc">購入から14日以内・プレイ時間2時間未満の場合は返金申請が可能です。</div></div></div>
+      </div>`,
+    footer: `<button class="btn-primary" onclick="location.href='Mypage.html'">マイページへ</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+  'game-nolibrary': {
+    title: '📚 ゲームがライブラリ内に無い',
+    content: `
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px">購入したゲームが表示されない場合の確認手順です。</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">ページを更新する</div><div class="step-desc">購入直後は数分かかる場合があります。ブラウザをリロードしてください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">正しいアカウントか確認</div><div class="step-desc">購入時に使用したアカウントでログインしているか確認してください。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">購入履歴を確認する</div><div class="step-desc">マイページ ＞ 購入履歴 から該当の購入が完了しているか確認してください。</div></div></div>
+      </div>
+      <div class="info-box"><span class="info-icon">ℹ️</span><span>購入履歴に記録があるのにライブラリに表示されない場合はサポートにお問い合わせください。</span></div>`,
+    footer: `<button class="btn-primary" onclick="goToForm('game-nolibrary')">サポートに問い合わせる</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+  'account-details': {
+    title: '👤 アカウント詳細の変更',
+    content: `
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px">アカウント情報はマイページから変更できます。</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">メールアドレスの変更</div><div class="step-desc">マイページ ＞ アカウント設定 ＞「メールアドレス」の編集ボタンから変更できます。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">電話番号の変更</div><div class="step-desc">マイページ ＞ セキュリティ ＞「2段階認証」から電話番号を更新できます。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">支払い方法の変更</div><div class="step-desc">マイページ ＞ 支払い設定 からクレジットカード等の追加・削除が可能です。</div></div></div>
+      </div>`,
+    footer: `<button class="btn-primary" onclick="location.href='Mypage.html'">マイページへ</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+  'account-signin': {
+    title: '🔐 アカウントにサインインできない',
+    content: `
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">パスワードをリセットする</div><div class="step-desc">ログイン画面の「パスワードを忘れた場合」から再設定メールを送信してください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">メールアドレスを確認する</div><div class="step-desc">登録時のメールアドレスを正確に入力しているか確認してください。大文字・小文字の違いにご注意ください。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">ブラウザのキャッシュをクリア</div><div class="step-desc">ブラウザのキャッシュ・Cookieを削除してから再度お試しください。</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">アカウントがロックされている</div><div class="step-desc">連続してログインに失敗するとアカウントが一時ロックされます。30分後に再試行するか、サポートにお問い合わせください。</div></div></div>
+      </div>`,
+    footer: `<button class="btn-primary" onclick="location.href='Login.html'">ログイン画面へ</button><button class="btn-secondary" onclick="goToForm('account-signin')">サポートに問い合わせる</button>`
+  },
+
+  'purchase-failed': {
+    title: '💳 購入が完了できない',
+    content: `
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">カード情報を確認する</div><div class="step-desc">カード番号・有効期限・セキュリティコードが正確に入力されているか確認してください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">残高・利用限度額を確認する</div><div class="step-desc">カードの残高または利用限度額が不足していないか確認してください。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">3Dセキュア認証</div><div class="step-desc">カード会社から認証を求められている場合は、指示に従って認証を完了してください。</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">別の支払い方法を試す</div><div class="step-desc">別のカードや支払い方法に変更してお試しください。</div></div></div>
+      </div>
+      <div class="info-box"><span class="info-icon">ℹ️</span><span>購入失敗後に請求が発生している場合は、通常2〜3営業日以内に自動的に取り消されます。</span></div>`,
+    footer: `<button class="btn-primary" onclick="goToForm('purchase-failed')">サポートに問い合わせる</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+  'purchase-unknown': {
+    title: '❓ 不明な請求',
+    content: `
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px">身に覚えのない請求が発生している場合の手順です。</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">購入履歴を確認する</div><div class="step-desc">マイページ ＞ 支払い設定 ＞ 購入履歴から該当の購入が表示されるか確認してください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">家族・知人の利用を確認する</div><div class="step-desc">同一アカウントを利用している家族や友人が購入した可能性があります。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">不正アクセスの可能性</div><div class="step-desc">不正アクセスが疑われる場合は、至急パスワードを変更し、2段階認証を有効にしてください。</div></div></div>
+      </div>
+      <div class="warn-box"><span>⚠️</span><span>不正利用が確認された場合は、すぐにカード会社にもご連絡ください。</span></div>`,
+    footer: `<button class="btn-primary" onclick="goToForm('purchase-unknown')">サポートに問い合わせる</button><button class="btn-secondary" onclick="location.href='Mypage.html'">購入履歴を確認</button>`
+  },
+
+  'purchase-history': {
+    title: '🧾 購入履歴の表示',
+    content: `
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px">すべての購入履歴はマイページから確認できます。</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">マイページにアクセス</div><div class="step-desc">ヘッダーの「マイページ」をクリックしてアカウントページに移動してください。</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">支払い設定を開く</div><div class="step-desc">左サイドバーから「支払い設定」を選択してください。</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">購入履歴を確認</div><div class="step-desc">「購入設定」セクションに全購入の一覧が表示されます。領収書の再発行も可能です。</div></div></div>
+      </div>`,
+    footer: `<button class="btn-primary" onclick="location.href='Mypage.html'">マイページへ</button><button class="btn-secondary" onclick="closeDetail()">閉じる</button>`
+  },
+
+};
+
+// ── Toggle support card ──────────────────────────────────
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// ── Toggle FAQ ──────────────────────────────────────────
+function toggleFaq(id) {
+  const item = document.getElementById(id);
+  item.classList.toggle('open');
+}
+
+// ── Open detail panel ────────────────────────────────────
+function openDetail(key) {
+  const d = DETAILS[key];
+  if (!d) return;
+  document.getElementById('detailTitle').innerHTML = d.title;
+  document.getElementById('detailContent').innerHTML = d.content;
+  document.getElementById('detailFooter').innerHTML = d.footer;
+  document.getElementById('detailOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Go to form with category preset ─────────────────────
+function goToForm(category) {
+  closeDetail();
+  const select = document.getElementById('cCategory');
+  if (select) select.value = category;
+  scrollToForm();
+}
+
+// ── Scroll to form ───────────────────────────────────────
+function scrollToForm() {
+  document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Submit form ──────────────────────────────────────────
+function submitForm() {
+  const name     = document.getElementById('cName').value.trim();
+  const email    = document.getElementById('cEmail').value.trim();
+  const category = document.getElementById('cCategory').value;
+  const subject  = document.getElementById('cSubject').value.trim();
+  const body     = document.getElementById('cBody').value.trim();
+
+  if (!name)     { showToast('お名前を入力してください'); return; }
+  if (!email || !email.includes('@')) { showToast('正しいメールアドレスを入力してください'); return; }
+  if (!category) { showToast('カテゴリを選択してください'); return; }
+  if (!subject)  { showToast('件名を入力してください'); return; }
+  if (!body)     { showToast('お問い合わせ内容を入力してください'); return; }
+
+  // Simulate submit
+  const wrap = document.getElementById('contactForm');
+  wrap.innerHTML = `
+    <div style="text-align:center;padding:32px 20px">
+      <div style="font-size:52px;margin-bottom:16px">✅</div>
+      <h2 style="font-size:20px;color:var(--text-white);margin-bottom:8px">送信完了しました</h2>
+      <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:20px">
+        お問い合わせを受け付けました。<br>
+        <strong style="color:var(--accent-light)">${email}</strong> に確認メールをお送りしました。<br>
+        通常2〜3営業日以内にご返信いたします。
+      </p>
+      <button onclick="location.href='portal_index.html'" style="background:var(--accent);color:#fff;border:none;border-radius:3px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer">ストアに戻る</button>
+    </div>`;
+}
+
+// ── Support search ───────────────────────────────────────
+function searchSupport() {
+  const q = document.getElementById('supportSearch').value.trim().toLowerCase();
+  if (!q) return;
+
+  const keywords = {
+    'プレイ': 'game-noplay', 'できない': 'game-noplay', '起動': 'game-noplay',
+    'クラッシュ': 'game-techissue', '技術': 'game-techissue', '重い': 'game-techissue',
+    '削除': 'game-remove', '消し': 'game-remove',
+    'ライブラリ': 'game-nolibrary', '表示': 'game-nolibrary',
+    'メール': 'account-details', '電話': 'account-details', '支払い': 'account-details',
+    'サインイン': 'account-signin', 'ログイン': 'account-signin', 'パスワード': 'account-signin',
+    '購入': 'purchase-failed', '決済': 'purchase-failed',
+    '請求': 'purchase-unknown', '不明': 'purchase-unknown',
+    '履歴': 'purchase-history', '領収': 'purchase-history',
+  };
+
+  for (const [kw, key] of Object.entries(keywords)) {
+    if (q.includes(kw)) { openDetail(key); return; }
+  }
+  showToast('「' + document.getElementById('supportSearch').value + '」に関するFAQは見つかりませんでした。フォームよりお問い合わせください。');
+  scrollToForm();
+}
+document.getElementById('supportSearch').addEventListener('keydown', e => { if (e.key === 'Enter') searchSupport(); });
+
+// ── Toast ────────────────────────────────────────────────
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast on' + (type ? ' '+type : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('on'), 3000);
+}
+
+// ── Keyboard ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDetail();
+});
+
+// ── Login check ──────────────────────────────────────────
+(function() {
+  try {
+    const u = JSON.parse(sessionStorage.getItem('nexus_user'));
+    if (u && u.name) {
+      const link = document.getElementById('hdrLoginLink');
+      if (link) {
+        link.textContent = '👤 ' + u.name;
+        link.href = 'Mypage.html';
+        link.style.color = '#66c0f4';
+        link.style.fontWeight = '600';
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

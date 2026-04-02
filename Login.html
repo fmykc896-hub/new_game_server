@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ログイン — NEXUS GAMES</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #08080f;
+  --bg2:    #0e0e1c;
+  --bg3:    #141428;
+  --card:   #191930;
+  --border: rgba(255,255,255,.07);
+  --b2:     rgba(255,255,255,.13);
+  --accent: #00d4ff;
+  --red:    #fe2c55;
+  --gold:   #ffc107;
+  --green:  #00e676;
+  --text:   #ccd6f0;
+  --muted:  #525870;
+  --bright: #f0f4ff;
+  --mono:   'DM Mono', monospace;
+}
+
+*, ::before, ::after { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ── BACKGROUND ── */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 40%, rgba(0,212,255,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 70%, rgba(254,44,85,.05) 0%, transparent 60%),
+    var(--bg);
+}
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 60px;
+  background: #171a21;
+  border-bottom: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  display: flex; align-items: center; padding: 0 24px; gap: 20px;
+}
+.logo {
+  font-size: 22px; font-weight: 900; letter-spacing: 2px;
+  color: #ffffff; text-transform: uppercase; white-space: nowrap;
+  font-family: "Motiva Sans", "Noto Sans JP", Arial, sans-serif;
+  -webkit-text-fill-color: unset; background: none;
+}
+.logo span { color: #66c0f4; }
+.nav-back {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 6px;
+  color: #7a99b0; font-size: 13px; cursor: pointer;
+  transition: color .2s;
+}
+.nav-back:hover { color: #ffffff; }
+
+/* ── MAIN LAYOUT ── */
+.wrap {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px 20px 40px;
+}
+
+/* ── CARD ── */
+.card {
+  width: 100%; max-width: 440px;
+  background: var(--bg2);
+  border: 1px solid var(--b2);
+  border-radius: 20px;
+  padding: 40px 36px 36px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.03) inset;
+}
+
+/* ── TABS (signup / login) ── */
+.tab-row {
+  display: flex; gap: 0;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 28px;
+}
+.tab {
+  flex: 1; padding: 8px; border-radius: 8px; border: none;
+  font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all .2s; color: var(--muted); background: transparent;
+}
+.tab.on {
+  background: var(--bg3); color: var(--bright);
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+
+/* ── SOCIAL BUTTONS ── */
+.social-grid {
+  display: flex; flex-direction: column; gap: 9px;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 12px 16px;
+  border-radius: 10px; border: 1px solid var(--b2);
+  background: rgba(255,255,255,.04);
+  color: var(--bright); font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all .2s; position: relative; overflow: hidden;
+}
+.social-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+  transform: translateX(-100%); transition: transform .4s;
+}
+.social-btn:hover { border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.08); transform: translateY(-1px); }
+.social-btn:hover::before { transform: translateX(100%); }
+.social-btn:active { transform: none; }
+
+.social-icon {
+  width: 24px; height: 24px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; border-radius: 5px;
+}
+.social-label { flex: 1; text-align: left; }
+.social-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: .8px; padding: 2px 7px;
+  border-radius: 3px; flex-shrink: 0;
+}
+.social-badge.streamer { background: rgba(0,212,255,.15); color: var(--accent); border: 1px solid rgba(0,212,255,.25); }
+.social-badge.soon { background: rgba(255,255,255,.06); color: var(--muted); border: 1px solid var(--border); }
+
+/* Platform colors */
+.sb-tiktok { border-color: rgba(254,44,85,.25); }
+.sb-tiktok:hover { border-color: rgba(254,44,85,.5); box-shadow: 0 0 20px rgba(254,44,85,.12); }
+.sb-google:hover  { border-color: rgba(234,67,53,.4); box-shadow: 0 0 20px rgba(234,67,53,.08); }
+.sb-discord:hover { border-color: rgba(88,101,242,.4); box-shadow: 0 0 20px rgba(88,101,242,.08); }
+.sb-twitch:hover  { border-color: rgba(145,71,255,.4); box-shadow: 0 0 20px rgba(145,71,255,.08); }
+.sb-youtube:hover { border-color: rgba(255,0,0,.4); box-shadow: 0 0 20px rgba(255,0,0,.08); }
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 18px 0; color: var(--muted); font-size: 12px;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── FORM ── */
+.form { display: flex; flex-direction: column; gap: 12px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .8px;
+  color: rgba(255,255,255,.4); text-transform: uppercase;
+}
+.field-input {
+  background: rgba(255,255,255,.05); border: 1px solid var(--border);
+  border-radius: 9px; padding: 11px 14px;
+  color: var(--bright); font-family: 'Noto Sans JP', sans-serif; font-size: 14px;
+  outline: none; transition: all .2s; width: 100%;
+}
+.field-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,212,255,.1); }
+.field-input::placeholder { color: var(--muted); font-size: 13px; }
+.field-input.error { border-color: var(--red); box-shadow: 0 0 0 2px rgba(254,44,85,.1); }
+
+.field-hint { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 2px; }
+
+/* Role selector */
+.role-select {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 4px;
+}
+.role-opt {
+  padding: 11px 12px; border-radius: 9px; border: 1px solid var(--border);
+  background: transparent; cursor: pointer; transition: all .2s; text-align: center;
+}
+.role-opt:hover { border-color: var(--b2); }
+.role-opt.on { border-color: var(--accent); background: rgba(0,212,255,.08); }
+.role-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+.role-name { font-size: 12px; font-weight: 700; color: var(--bright); display: block; }
+.role-desc { font-size: 10px; color: var(--muted); display: block; margin-top: 2px; }
+
+/* Password toggle */
+.pw-wrap { position: relative; }
+.pw-toggle {
+  position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); cursor: pointer; font-size: 15px; border: none;
+  background: transparent; transition: color .2s;
+}
+.pw-toggle:hover { color: var(--text); }
+
+/* Error message */
+.field-error { font-size: 11px; color: var(--red); margin-top: 3px; display: none; }
+.field-error.show { display: block; }
+
+/* Submit */
+.btn-submit {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--accent), #0099bb);
+  border: none; border-radius: 10px;
+  color: #000; font-family: 'Noto Sans JP', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: all .2s; margin-top: 4px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-submit:hover { box-shadow: 0 0 28px rgba(0,212,255,.4); transform: translateY(-1px); }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Terms */
+.terms {
+  font-size: 11px; color: var(--muted); text-align: center;
+  margin-top: 14px; line-height: 1.8;
+}
+.terms a { color: var(--accent); }
+.terms a:hover { text-decoration: underline; }
+
+/* ── FOOTER NOTE ── */
+.switch-note {
+  text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted);
+}
+.switch-note a { color: var(--accent); font-weight: 600; cursor: pointer; }
+.switch-note a:hover { text-decoration: underline; }
+
+/* ── STREAMER BANNER ── */
+.streamer-banner {
+  background: linear-gradient(135deg, rgba(0,212,255,.08), rgba(254,44,85,.06));
+  border: 1px solid rgba(0,212,255,.18);
+  border-radius: 10px; padding: 12px 16px;
+  margin-top: 20px; display: flex; align-items: center; gap: 12px;
+}
+.sb-icon { font-size: 22px; flex-shrink: 0; }
+.sb-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.sb-text strong { color: var(--text); }
+
+/* ── PLATFORM LOGOS ── */
+.tiktok-logo { background: #000; color: #fff; font-weight: 900; font-size: 13px; border-radius: 4px; }
+.google-logo  { font-size: 17px; }
+.discord-logo { font-size: 17px; color: #5865f2; }
+.twitch-logo  { font-size: 17px; color: #9147ff; }
+.youtube-logo { font-size: 17px; color: #ff0000; }
+.obs-logo     { font-size: 17px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.3); color: var(--accent);
+  padding: 9px 22px; border-radius: 8px; font-size: 13px; z-index: 9999;
+  transition: all .3s; opacity: 0; pointer-events: none; white-space: nowrap;
+}
+.toast.on { opacity: 1; }
+.toast.err { background: rgba(254,44,85,.1); border-color: rgba(254,44,85,.3); color: var(--red); }
+.toast.ok  { background: rgba(0,230,118,.1); border-color: rgba(0,230,118,.3); color: var(--green); }
+
+/* ── LOADING SPINNER ── */
+.spinner {
+  width: 16px; height: 16px; border: 2px solid rgba(0,0,0,.3);
+  border-top-color: #000; border-radius: 50%;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SUCCESS SCREEN ── */
+.success-wrap {
+  text-align: center; padding: 20px 0;
+}
+.success-icon { font-size: 56px; margin-bottom: 16px; animation: popIn .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes popIn { from{transform:scale(0)}to{transform:scale(1)} }
+.success-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; color: var(--bright); margin-bottom: 8px; }
+.success-sub { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+.btn-go {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent), #0099bb);
+  border: none; border-radius: 10px; padding: 13px 28px;
+  color: #000; font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all .2s; text-decoration: none;
+}
+.btn-go:hover { box-shadow: 0 0 24px rgba(0,212,255,.4); transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="portal_index.html" class="logo">Z<span>&amp;A</span> Games</a>
+  <a href="portal_index.html" class="nav-back">← ストアに戻る</a>
+</nav>
+
+<!-- MAIN -->
+<div class="wrap">
+  <div class="card" id="mainCard">
+
+    <!-- Tab row: signup / login -->
+    <div class="tab-row">
+      <button class="tab on" id="tabSignup" onclick="switchTab('signup')">新規登録</button>
+      <button class="tab"    id="tabLogin"  onclick="switchTab('login')">ログイン</button>
+    </div>
+
+    <!-- ══ SIGNUP PANEL ══ -->
+    <div id="panelSignup">
+
+      <!-- Social (always shown) -->
+      <div class="social-grid">
+
+        <!-- TikTok -->
+        <button class="social-btn sb-tiktok" onclick="socialAuth('tiktok')">
+          <span class="social-icon tiktok-logo">♪</span>
+          <span class="social-label">TikTokで登録</span>
+          <span class="social-badge streamer">配信者向け</span>
+        </button>
+
+        <!-- Google -->
+        <button class="social-btn sb-google" onclick="socialAuth('google')">
+          <span class="social-icon google-logo">🔵</span>
+          <span class="social-label">Googleで登録</span>
+        </button>
+
+        <!-- Discord -->
+        <button class="social-btn sb-discord" onclick="socialAuth('discord')">
+          <span class="social-icon discord-logo">💬</span>
+          <span class="social-label">Discordで登録</span>
+        </button>
+
+      </div>
+
+      <div class="divider">またはメールアドレスで</div>
+
+      <!-- Email form -->
+      <div class="form" id="signupForm">
+
+        <!-- Role -->
+        <div class="field">
+          <div class="field-label">アカウントの種類</div>
+          <div class="role-select">
+            <div class="role-opt on" id="rolePlayer" onclick="setRole('player')">
+              <span class="role-icon">🎮</span>
+              <span class="role-name">プレイヤー</span>
+              <span class="role-desc">ゲームを楽しむ</span>
+            </div>
+            <div class="role-opt" id="roleStreamer" onclick="setRole('streamer')">
+              <span class="role-icon">📡</span>
+              <span class="role-name">配信者</span>
+              <span class="role-desc">ライブ配信する</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">表示名</label>
+          <input class="field-input" id="suName" type="text" placeholder="例: NightCore_JP" autocomplete="nickname">
+        </div>
+
+        <div class="field">
+          <label class="field-label">メールアドレス</label>
+          <input class="field-input" id="suEmail" type="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label class="field-label">パスワード</label>
+          <div class="pw-wrap">
+            <input class="field-input" id="suPass" type="password" placeholder="8文字以上" autocomplete="new-password">
+            <button class="pw-toggle" onclick="togglePw('suPass',this)" type="button">👁</button>
+          </div>
+          <div class="field-hint">8文字以上、英数字を含む</div>
+        </div>
+
+        <!-- Streamer extras (shown when role=streamer) -->
+        <div id="streamerExtras" style="display:none">
+          <div class="field">
+            <label class="field-label">配信プラットフォーム（メイン）</label>
+            <div class="social-grid" style="gap:7px">
+              <button class="social-btn sb-tiktok platform-sel" data-p="tiktok" onclick="selectPlatform(this)" style="padding:9px 12px">
+                <span class="social-icon tiktok-logo">♪</span>
+                <span class="social-label" style="font-size:13px">TikTok</span>
+              </button>
+              <button class="social-btn sb-youtube platform-sel" data-p="youtube" onclick="selectPlatform(this)" style="padding:9px 12px">
+                <span class="social-icon youtube-logo">▶</span>
+                <span class="social-label" style="font-size:13px">YouTube</span>
+              </button>
+              <button class="social-btn sb-twitch platform-sel" data-p="twitch" onclick="selectPlatform(this)" style="padding:9px 12px">
+                <span class="social-icon twitch-logo">🟣</span>
+                <span class="social-label" style="font-size:13px">Twitch</span>
+              </button>
+            </div>
+            <div class="field-hint" style="margin-top:6px">OBSを使えばどのプラットフォームでも配信できます。後から変更可能です。</div>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="btnSignup" onclick="doSignup()">
+          <span id="signupBtnTxt">登録する</span>
+        </button>
+
+        <div class="terms">
+          登録することで<a href="#">利用規約</a>と<a href="#">プライバシーポリシー</a>に同意したことになります
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ══ LOGIN PANEL ══ -->
+    <div id="panelLogin" style="display:none">
+
+      <div class="social-grid">
+        <button class="social-btn sb-tiktok" onclick="socialAuth('tiktok')">
+          <span class="social-icon tiktok-logo">♪</span>
+          <span class="social-label">TikTokでログイン</span>
+        </button>
+        <button class="social-btn sb-google" onclick="socialAuth('google')">
+          <span class="social-icon google-logo">🔵</span>
+          <span class="social-label">Googleでログイン</span>
+        </button>
+        <button class="social-btn sb-discord" onclick="socialAuth('discord')">
+          <span class="social-icon discord-logo">💬</span>
+          <span class="social-label">Discordでログイン</span>
+        </button>
+      </div>
+
+      <div class="divider">またはメールアドレスで</div>
+
+      <div class="form">
+        <div class="field">
+          <label class="field-label">メールアドレス</label>
+          <input class="field-input" id="liEmail" type="email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="field-label">パスワード</label>
+          <div class="pw-wrap">
+            <input class="field-input" id="liPass" type="password" placeholder="パスワード" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+            <button class="pw-toggle" onclick="togglePw('liPass',this)" type="button">👁</button>
+          </div>
+        </div>
+
+        <div style="text-align:right;margin-top:-4px">
+          <a href="#" style="font-size:12px;color:var(--accent)">パスワードを忘れた場合</a>
+        </div>
+
+        <button class="btn-submit" id="btnLogin" onclick="doLogin()">
+          <span id="loginBtnTxt">ログイン</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Switch note -->
+    <div class="switch-note" id="switchNote">
+      アカウントをお持ちの方は<a onclick="switchTab('login')">ログイン</a>
+    </div>
+
+    <!-- Streamer info banner -->
+    <div class="streamer-banner" id="streamerBanner">
+      <div class="sb-icon">📡</div>
+      <div class="sb-text">
+        <strong>配信者の方へ：</strong>TikTok・YouTube・Twitch・OBSなど<br>
+        どのプラットフォームでも配信に対応しています。ログイン後にダッシュボードから設定できます。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══ STATE ════════════════════════════════════
+const API = 'http://localhost:3000';
+let currentRole = 'player';
+let selectedPlatform = '';
+
+// ══ TAB SWITCH ═══════════════════════════════
+function switchTab(tab) {
+  const isSignup = tab === 'signup';
+  document.getElementById('tabSignup').classList.toggle('on', isSignup);
+  document.getElementById('tabLogin').classList.toggle('on', !isSignup);
+  document.getElementById('panelSignup').style.display = isSignup ? '' : 'none';
+  document.getElementById('panelLogin').style.display  = isSignup ? 'none' : '';
+  document.getElementById('switchNote').innerHTML = isSignup
+    ? 'アカウントをお持ちの方は<a onclick="switchTab(\'login\')">ログイン</a>'
+    : 'まだアカウントをお持ちでない方は<a onclick="switchTab(\'signup\')">新規登録</a>';
+}
+
+// ══ ROLE ═════════════════════════════════════
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('rolePlayer').classList.toggle('on', role === 'player');
+  document.getElementById('roleStreamer').classList.toggle('on', role === 'streamer');
+  document.getElementById('streamerExtras').style.display = role === 'streamer' ? '' : 'none';
+}
+
+// ══ PLATFORM ══════════════════════════════════
+function selectPlatform(btn) {
+  document.querySelectorAll('.platform-sel').forEach(b => {
+    b.style.borderColor = '';
+    b.style.background = '';
+  });
+  selectedPlatform = btn.dataset.p;
+  btn.style.borderColor = 'rgba(0,212,255,.5)';
+  btn.style.background = 'rgba(0,212,255,.08)';
+}
+
+// ══ PW TOGGLE ════════════════════════════════
+function togglePw(id, btn) {
+  const inp = document.getElementById(id);
+  const isPass = inp.type === 'password';
+  inp.type = isPass ? 'text' : 'password';
+  btn.textContent = isPass ? '🙈' : '👁';
+}
+
+// ══ SOCIAL AUTH ══════════════════════════════
+async function socialAuth(platform) {
+  const labels = {
+    tiktok:  'TikTok',
+    google:  'Google',
+    discord: 'Discord',
+    twitch:  'Twitch',
+    youtube: 'YouTube',
+  };
+
+  // Try real OAuth via server
+  try {
+    const res = await fetch(`${API}/api/auth/${platform}/start`);
+    const data = await res.json();
+    if (data.ok && data.authUrl) {
+      window.location.href = data.authUrl;
+      return;
+    }
+  } catch(_) {}
+
+  // Fallback: demo login
+  toast(`デモ: ${labels[platform]}ログインをシミュレーション中...`);
+  setTimeout(() => {
+    const demoUser = {
+      name: `${labels[platform]}ユーザー`,
+      email: `demo@${platform}.com`,
+      role: currentRole,
+      platform,
+      avatar: platform === 'tiktok' ? '🎵' : platform === 'google' ? '🔵' : '💬',
+      authMethod: platform,
+    };
+    saveSession(demoUser);
+    showSuccess(demoUser);
+  }, 1000);
+}
+
+// ══ SIGNUP ═══════════════════════════════════
+async function doSignup() {
+  const name  = document.getElementById('suName').value.trim();
+  const email = document.getElementById('suEmail').value.trim();
+  const pass  = document.getElementById('suPass').value;
+
+  if (!name)  { toast('表示名を入力してください', 'err'); return; }
+  if (!email || !email.includes('@')) { toast('正しいメールアドレスを入力してください', 'err'); return; }
+  if (pass.length < 8) { toast('パスワードは8文字以上で入力してください', 'err'); return; }
+
+  setBtnLoading('btnSignup', 'signupBtnTxt', true);
+
+  try {
+    const res = await fetch(`${API}/api/auth/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password: pass, role: currentRole, platform: selectedPlatform }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      saveSession({ name, email, role: currentRole, platform: selectedPlatform, avatar: '🎮', authMethod: 'email' });
+      showSuccess({ name, role: currentRole });
+    } else {
+      toast(data.error || '登録に失敗しました', 'err');
+      setBtnLoading('btnSignup', 'signupBtnTxt', false, '登録する');
+    }
+  } catch(_) {
+    // サーバー未起動時のデモ動作
+    const user = { name, email, role: currentRole, platform: selectedPlatform, avatar: '🎮', authMethod: 'email' };
+    saveSession(user);
+    showSuccess(user);
+  }
+}
+
+// ══ LOGIN ════════════════════════════════════
+async function doLogin() {
+  const email = document.getElementById('liEmail').value.trim();
+  const pass  = document.getElementById('liPass').value;
+
+  if (!email) { toast('メールアドレスを入力してください', 'err'); return; }
+  if (!pass)  { toast('パスワードを入力してください', 'err'); return; }
+
+  setBtnLoading('btnLogin', 'loginBtnTxt', true);
+
+  try {
+    const res = await fetch(`${API}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      saveSession({ name: data.name || email.split('@')[0], email, role: data.role || 'player', avatar: '🎮', authMethod: 'email' });
+      showSuccess({ name: data.name || email.split('@')[0], role: data.role });
+    } else {
+      toast(data.error || 'ログインに失敗しました', 'err');
+      setBtnLoading('btnLogin', 'loginBtnTxt', false, 'ログイン');
+    }
+  } catch(_) {
+    // デモ動作
+    const user = { name: email.split('@')[0], email, role: 'player', avatar: '🎮', authMethod: 'email' };
+    saveSession(user);
+    showSuccess(user);
+  }
+}
+
+// ══ SESSION ══════════════════════════════════
+function saveSession(user) {
+  sessionStorage.setItem('nexus_user', JSON.stringify(user));
+}
+
+// ══ SUCCESS ══════════════════════════════════
+function showSuccess(user) {
+  const isStreamer = user.role === 'streamer';
+  const dest = isStreamer ? 'liver-portal.html' : 'Mypage.html';
+  const destLabel = isStreamer ? '配信ダッシュボードへ' : 'マイページへ';
+
+  document.getElementById('mainCard').innerHTML = `
+    <div class="success-wrap">
+      <div class="success-icon">✅</div>
+      <div class="success-title">ようこそ、${esc(user.name)} さん</div>
+      <div class="success-sub">
+        アカウントの準備ができました。<br>
+        ${isStreamer ? '配信ダッシュボードで配信の設定を始めましょう。' : 'お気に入りのゲームを探しましょう。'}
+      </div>
+      <a href="${dest}" class="btn-go">
+        ${destLabel} →
+      </a>
+      ${isStreamer ? '' : `<div style="margin-top:12px"><a href="liver-portal.html" style="font-size:12px;color:var(--muted)">配信者として利用する場合はこちら →</a></div>`}
+    </div>`;
+}
+
+// ══ UI HELPERS ═══════════════════════════════
+function setBtnLoading(btnId, txtId, loading, label) {
+  const btn = document.getElementById(btnId);
+  const txt = document.getElementById(txtId);
+  btn.disabled = loading;
+  txt.innerHTML = loading
+    ? '<div class="spinner"></div>'
+    : (label || txt.textContent);
+}
+
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast on' + (type ? ' ' + type : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('on'), 2800);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// URL パラメータチェック（OAuthコールバック）
+const params = new URLSearchParams(location.search);
+if (params.get('error'))   toast('ログインがキャンセルされました', 'err');
+if (params.get('tk_ok'))   { /* TikTok OAuth callback handled by liver-portal */ }
+</script>
+</body>
+</html>
