@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイページ — NEXUS GAMES</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════
+   VARIABLES & RESET
+═══════════════════════════════ */
+:root {
+  --bg:     #08080f;
+  --bg2:    #0e0e1c;
+  --bg3:    #141428;
+  --card:   #17172c;
+  --border: rgba(255,255,255,.07);
+  --b2:     rgba(255,255,255,.13);
+  --accent: #00d4ff;
+  --red:    #fe2c55;
+  --gold:   #ffc107;
+  --green:  #00e676;
+  --purple: #b388ff;
+  --text:   #ccd6f0;
+  --muted:  #525870;
+  --bright: #f0f4ff;
+  --mono:   'DM Mono', monospace;
+  --nav-h:  60px;
+  --side-w: 224px;
+}
+*, ::before, ::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif; font-size: 14px; min-height: 100vh;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: 'Noto Sans JP', sans-serif; }
+
+/* ═══════════════════════════════
+   NAV
+═══════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 60px;
+  background: #171a21;
+  border-bottom: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  display: flex; align-items: center; padding: 0 24px; gap: 16px;
+}
+.logo {
+  font-size: 22px; font-weight: 900; letter-spacing: 2px;
+  color: #ffffff; text-transform: uppercase; white-space: nowrap;
+  font-family: "Motiva Sans", "Noto Sans JP", Arial, sans-serif;
+  -webkit-text-fill-color: unset; background: none;
+}
+.logo span { color: #66c0f4; }
+.nav-user {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0; border: 2px solid rgba(0,212,255,.3);
+}
+.nav-name { font-size: 13px; font-weight: 600; color: var(--bright); }
+.nav-role {
+  font-size: 10px; color: var(--muted);
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 7px;
+}
+.btn-store {
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 14px; color: var(--muted); font-size: 12px;
+  cursor: pointer; transition: .2s;
+}
+.btn-store:hover { border-color: var(--b2); color: var(--text); }
+
+/* ═══════════════════════════════
+   LAYOUT
+═══════════════════════════════ */
+.layout {
+  display: flex;
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--side-w);
+  flex-shrink: 0;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 3px; }
+
+.sb-user {
+  padding: 22px 18px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+}
+.sb-avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; border: 3px solid rgba(0,212,255,.25);
+  cursor: pointer; transition: .2s; position: relative;
+}
+.sb-avatar:hover { border-color: var(--accent); }
+.sb-avatar-edit {
+  position: absolute; bottom: 0; right: 0;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: #000;
+  font-size: 10px; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--bg2);
+}
+.sb-name { font-weight: 700; font-size: 15px; color: var(--bright); }
+.sb-handle { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.sb-role-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: .8px;
+  padding: 3px 10px; border-radius: 20px;
+}
+.sb-role-chip.player   { background: rgba(0,212,255,.12); color: var(--accent); border: 1px solid rgba(0,212,255,.25); }
+.sb-role-chip.streamer { background: rgba(254,44,85,.12); color: var(--red);    border: 1px solid rgba(254,44,85,.25); }
+
+.sb-nav { flex: 1; padding: 12px 10px; }
+.sb-section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); padding: 10px 10px 4px;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  cursor: pointer; transition: .2s; color: var(--muted);
+  font-size: 13px; font-weight: 500; border: none; background: transparent;
+  width: 100%; text-align: left; margin-bottom: 2px;
+}
+.sb-item:hover { background: rgba(255,255,255,.05); color: var(--text); }
+.sb-item.active { background: rgba(0,212,255,.1); color: var(--accent); }
+.sb-item.active .sb-ic { color: var(--accent); }
+.sb-ic { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+.sb-badge {
+  margin-left: auto; background: var(--red); color: #fff;
+  font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center;
+}
+
+.sb-footer {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+}
+.btn-logout {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 9px 12px; border-radius: 8px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--muted); font-size: 12px; cursor: pointer; transition: .2s;
+}
+.btn-logout:hover { border-color: rgba(254,44,85,.3); color: var(--red); }
+
+/* ── MAIN ── */
+.main { flex: 1; padding: 32px; max-width: 900px; overflow-y: auto; }
+
+/* ═══════════════════════════════
+   PANELS (sections)
+═══════════════════════════════ */
+.panel { display: none; }
+.panel.active { display: block; animation: panelIn .2s ease; }
+@keyframes panelIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.panel-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px;
+  color: var(--bright); margin-bottom: 6px; display: flex; align-items: center; gap: 12px;
+}
+.panel-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.7; }
+
+/* ═══════════════════════════════
+   OVERVIEW (home)
+═══════════════════════════════ */
+.overview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
+.ov-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 6px;
+}
+.ov-val { font-family: var(--mono); font-size: 28px; font-weight: 500; }
+.ov-val.c { color: var(--accent); } .ov-val.g { color: var(--gold); } .ov-val.r { color: var(--red); }
+.ov-lbl { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+
+/* Recent history mini */
+.recent-label {
+  font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1.5px;
+  color: var(--bright); margin-bottom: 12px;
+}
+.recent-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+.recent-card {
+  flex: 0 0 130px; border-radius: 8px; overflow: hidden;
+  background: var(--card); border: 1px solid var(--border); cursor: pointer; transition: .2s;
+}
+.recent-card:hover { border-color: var(--b2); transform: translateY(-3px); }
+.rc-art { height: 80px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+.rc-name { padding: 6px 8px; font-size: 11px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rc-time { padding: 0 8px 7px; font-size: 10px; color: var(--muted); font-family: var(--mono); }
+
+/* ═══════════════════════════════
+   WISHLIST
+═══════════════════════════════ */
+.wl-toolbar {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+}
+.wl-count { font-size: 12px; color: var(--muted); margin-left: auto; }
+.wl-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 12px; }
+.wl-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  overflow: hidden; position: relative; cursor: pointer; transition: .2s;
+}
+.wl-card:hover { border-color: var(--b2); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+.wl-art { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 42px; position: relative; }
+.wl-remove {
+  position: absolute; top: 8px; right: 8px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(0,0,0,.7); border: 1px solid rgba(255,255,255,.15);
+  color: var(--muted); font-size: 13px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: .2s;
+}
+.wl-remove:hover { background: rgba(254,44,85,.5); color: #fff; border-color: var(--red); }
+.wl-body { padding: 10px 12px 12px; }
+.wl-name { font-size: 13px; font-weight: 700; color: var(--bright); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wl-genre { font-size: 10px; color: var(--muted); margin-bottom: 8px; }
+.wl-foot { display: flex; align-items: center; justify-content: space-between; }
+.wl-price { font-family: 'Bebas Neue', sans-serif; font-size: 17px; }
+.wl-price.paid { color: var(--accent); } .wl-price.free { color: var(--green); }
+.btn-wl-play {
+  background: rgba(0,212,255,.12); border: 1px solid rgba(0,212,255,.25);
+  border-radius: 5px; padding: 4px 10px; color: var(--accent);
+  font-size: 11px; font-weight: 700; cursor: pointer; transition: .2s;
+}
+.btn-wl-play:hover { background: rgba(0,212,255,.22); }
+
+.wl-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.wl-empty-icon { font-size: 48px; margin-bottom: 12px; }
+.wl-empty p { font-size: 13px; line-height: 1.8; }
+
+/* ═══════════════════════════════
+   HISTORY
+═══════════════════════════════ */
+.hist-list { display: flex; flex-direction: column; gap: 8px; }
+.hist-item {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 16px; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: .2s;
+}
+.hist-item:hover { border-color: var(--b2); }
+.hist-art { width: 48px; height: 48px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.hist-info { flex: 1; min-width: 0; }
+.hist-name { font-weight: 700; font-size: 13px; color: var(--bright); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hist-meta { font-size: 11px; color: var(--muted); }
+.hist-time { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; }
+.hist-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.hist-btn {
+  padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 700;
+  cursor: pointer; transition: .2s; border: 1px solid var(--border); background: transparent; color: var(--muted);
+}
+.hist-btn:hover { border-color: var(--b2); color: var(--text); }
+.hist-btn.wl { border-color: rgba(0,212,255,.25); color: var(--accent); background: rgba(0,212,255,.06); }
+.hist-btn.wl:hover { background: rgba(0,212,255,.14); }
+
+.hist-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.btn-clear-hist {
+  margin-left: auto; font-size: 11px; color: var(--muted); cursor: pointer;
+  background: transparent; border: 1px solid var(--border); border-radius: 5px; padding: 5px 10px; transition: .2s;
+}
+.btn-clear-hist:hover { border-color: rgba(254,44,85,.3); color: var(--red); }
+
+/* ═══════════════════════════════
+   SETTINGS COMMON
+═══════════════════════════════ */
+.settings-block {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; margin-bottom: 18px;
+}
+.sb-block-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--muted); padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.sb-row {
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 16px;
+}
+.sb-row:last-child { border-bottom: none; }
+.sb-row-info { flex: 1; }
+.sb-row-label { font-size: 13px; font-weight: 600; color: var(--bright); margin-bottom: 3px; }
+.sb-row-desc  { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.sb-row-ctrl  { flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+
+/* Inline edit field */
+.inline-edit-wrap { display: flex; flex-direction: column; gap: 6px; }
+.ie-val {
+  font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 8px;
+}
+.ie-edit-btn { font-size: 11px; color: var(--accent); cursor: pointer; transition: .2s; }
+.ie-edit-btn:hover { opacity: .7; }
+.ie-form { display: none; flex-direction: column; gap: 6px; }
+.ie-form.open { display: flex; }
+.ie-inp {
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  border-radius: 7px; padding: 8px 12px; color: var(--bright);
+  font-size: 13px; outline: none; transition: .2s; width: 100%; max-width: 300px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.ie-inp:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(0,212,255,.1); }
+.ie-inp::placeholder { color: var(--muted); }
+.ie-actions { display: flex; gap: 6px; }
+.btn-save {
+  padding: 6px 14px; border-radius: 6px; border: none;
+  background: var(--accent); color: #000; font-size: 12px; font-weight: 700; cursor: pointer; transition: .2s;
+}
+.btn-save:hover { box-shadow: 0 0 14px rgba(0,212,255,.4); }
+.btn-cancel-edit {
+  padding: 6px 12px; border-radius: 6px;
+  background: rgba(255,255,255,.06); border: 1px solid var(--border);
+  color: var(--muted); font-size: 12px; cursor: pointer; transition: .2s;
+}
+.btn-cancel-edit:hover { color: var(--text); }
+
+/* Toggle switch */
+.toggle { position: relative; width: 42px; height: 23px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.tg-track {
+  position: absolute; inset: 0; border-radius: 11.5px;
+  background: rgba(255,255,255,.1); cursor: pointer; transition: .25s; border: 1px solid var(--b2);
+}
+.toggle input:checked + .tg-track { background: var(--accent); border-color: var(--accent); }
+.tg-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: #fff; transition: .25s; pointer-events: none;
+}
+.toggle input:checked ~ .tg-thumb { left: 22px; }
+
+/* Password field with strength */
+.pw-wrap { position: relative; }
+.pw-eye {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  cursor: pointer; color: var(--muted); font-size: 15px; border: none;
+  background: transparent; transition: .2s;
+}
+.pw-eye:hover { color: var(--text); }
+.pw-strength { display: flex; gap: 4px; margin-top: 5px; }
+.pw-seg { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.08); transition: .3s; }
+.pw-seg.weak   { background: var(--red); }
+.pw-seg.medium { background: var(--gold); }
+.pw-seg.strong { background: var(--green); }
+.pw-strength-lbl { font-size: 10px; margin-top: 4px; }
+.pw-strength-lbl.weak   { color: var(--red); }
+.pw-strength-lbl.medium { color: var(--gold); }
+.pw-strength-lbl.strong { color: var(--green); }
+
+/* ═══════════════════════════════
+   AGE FILTER
+═══════════════════════════════ */
+.age-select {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 6px;
+}
+.age-opt {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px; border-radius: 9px; border: 1px solid var(--border);
+  cursor: pointer; transition: .2s; background: transparent;
+}
+.age-opt:hover { border-color: var(--b2); }
+.age-opt.selected { border-color: var(--accent); background: rgba(0,212,255,.08); }
+.age-dot {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--muted); flex-shrink: 0; transition: .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.age-opt.selected .age-dot { border-color: var(--accent); background: var(--accent); }
+.age-opt.selected .age-dot::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #000; }
+.age-opt-info { flex: 1; }
+.age-opt-label { font-size: 13px; font-weight: 700; color: var(--bright); margin-bottom: 2px; }
+.age-opt-desc  { font-size: 11px; color: var(--muted); line-height: 1.6; }
+.age-badge { font-size: 10px; font-weight: 700; letter-spacing: .8px; padding: 2px 9px; border-radius: 4px; }
+.age-badge.all  { background: rgba(0,230,118,.12); color: var(--green); border: 1px solid rgba(0,230,118,.25); }
+.age-badge.t15  { background: rgba(255,193,7,.12);  color: var(--gold);  border: 1px solid rgba(255,193,7,.25); }
+.age-badge.t18  { background: rgba(254,44,85,.12);  color: var(--red);   border: 1px solid rgba(254,44,85,.25); }
+
+/* ═══════════════════════════════
+   PAYMENT
+═══════════════════════════════ */
+.payment-methods { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.pm-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--card); cursor: default;
+}
+.pm-icon { width: 44px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,.07); flex-shrink: 0; }
+.pm-info { flex: 1; }
+.pm-name { font-size: 13px; font-weight: 700; color: var(--bright); margin-bottom: 2px; }
+.pm-detail { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.pm-default { font-size: 9px; font-weight: 700; letter-spacing: .8px; padding: 2px 7px; border-radius: 3px; background: rgba(0,212,255,.12); color: var(--accent); border: 1px solid rgba(0,212,255,.25); }
+.pm-delete { background: transparent; border: 1px solid var(--border); border-radius: 5px; padding: 5px 10px; color: var(--muted); font-size: 11px; cursor: pointer; transition: .2s; }
+.pm-delete:hover { border-color: rgba(254,44,85,.3); color: var(--red); }
+
+.btn-add-payment {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 12px 16px; border-radius: 10px;
+  border: 1px dashed rgba(0,212,255,.25); background: rgba(0,212,255,.04);
+  color: var(--accent); font-size: 13px; font-weight: 600; cursor: pointer; transition: .2s;
+}
+.btn-add-payment:hover { border-color: rgba(0,212,255,.5); background: rgba(0,212,255,.08); }
+
+.payment-note {
+  margin-top: 12px; padding: 12px 14px;
+  background: rgba(255,193,7,.05); border: 1px solid rgba(255,193,7,.15); border-radius: 8px;
+  font-size: 11px; color: var(--muted); line-height: 1.8;
+  display: flex; gap: 10px;
+}
+.payment-note-icon { font-size: 16px; flex-shrink: 0; }
+
+/* ═══════════════════════════════
+   SAVE BUTTON
+═══════════════════════════════ */
+.btn-save-section {
+  width: 100%; padding: 13px; border-radius: 9px; border: none;
+  background: linear-gradient(135deg, var(--accent), #0099bb);
+  color: #000; font-size: 14px; font-weight: 700; cursor: pointer; transition: .2s;
+  margin-top: 6px;
+}
+.btn-save-section:hover { box-shadow: 0 0 24px rgba(0,212,255,.35); transform: translateY(-1px); }
+
+/* ═══════════════════════════════
+   DANGER ZONE
+═══════════════════════════════ */
+.danger-zone {
+  border: 1px solid rgba(254,44,85,.2); border-radius: 12px;
+  padding: 18px 20px; margin-top: 20px;
+  background: rgba(254,44,85,.03);
+}
+.dz-title { font-size: 13px; font-weight: 700; color: var(--red); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.dz-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dz-desc { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.btn-danger {
+  background: transparent; border: 1px solid rgba(254,44,85,.35); border-radius: 6px;
+  padding: 8px 16px; color: var(--red); font-size: 12px; font-weight: 700; cursor: pointer; transition: .2s;
+  flex-shrink: 0;
+}
+.btn-danger:hover { background: rgba(254,44,85,.1); }
+
+/* ═══════════════════════════════
+   MODAL (confirm / add payment)
+═══════════════════════════════ */
+.modal-bg { display: none; position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,.85); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal-box { background: var(--bg2); border: 1px solid var(--b2); border-radius: 14px; padding: 28px 32px; width: 100%; max-width: 420px; box-shadow: 0 0 60px rgba(0,0,0,.8); animation: mOpen .22s ease; }
+@keyframes mOpen { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:none; } }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--bright); margin-bottom: 8px; }
+.modal-body { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 22px; }
+.modal-actions { display: flex; gap: 8px; }
+.btn-modal-ok { flex: 1; padding: 11px; border: none; border-radius: 8px; background: var(--red); color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s; }
+.btn-modal-ok:hover { opacity: .85; }
+.btn-modal-cancel { padding: 11px 18px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; transition: .2s; }
+.btn-modal-cancel:hover { color: var(--text); }
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.3); color: var(--accent);
+  padding: 9px 22px; border-radius: 8px; font-size: 13px; z-index: 9999;
+  transition: all .3s; opacity: 0; pointer-events: none; white-space: nowrap;
+}
+.toast.on { opacity: 1; }
+.toast.ok  { background: rgba(0,230,118,.1); border-color: rgba(0,230,118,.3); color: var(--green); }
+.toast.err { background: rgba(254,44,85,.1); border-color: rgba(254,44,85,.3); color: var(--red); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="nav">
+  <a href="portal_index.html" class="logo">Z<span>&amp;A</span> Games</a>
+  <div class="nav-user">
+    <div class="nav-avatar" id="navAvatar">🎮</div>
+    <div>
+      <div class="nav-name" id="navName">—</div>
+      <div class="nav-role" id="navRole">プレイヤー</div>
+    </div>
+    <a href="portal_index.html" class="btn-store">← ストアへ</a>
+  </div>
+</nav>
+
+<!-- ══════════ LAYOUT ══════════ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-user">
+      <div class="sb-avatar" id="sbAvatar" onclick="switchPanel('account')">
+        🎮
+        <div class="sb-avatar-edit">✏</div>
+      </div>
+      <div class="sb-name" id="sbName">—</div>
+      <div class="sb-handle" id="sbHandle">@—</div>
+      <div class="sb-role-chip player" id="sbRoleChip">プレイヤー</div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-section-label">メニュー</div>
+      <button class="sb-item active" onclick="switchPanel('overview')" id="navOverview">
+        <span class="sb-ic">🏠</span> ホーム
+      </button>
+      <button class="sb-item" onclick="switchPanel('wishlist')" id="navWishlist">
+        <span class="sb-ic">♡</span> ウィッシュリスト
+        <span class="sb-badge" id="wlBadge" style="display:none">0</span>
+      </button>
+      <button class="sb-item" onclick="switchPanel('history')" id="navHistory">
+        <span class="sb-ic">🕐</span> 閲覧履歴
+      </button>
+
+      <div class="sb-section-label" style="margin-top:8px">設定</div>
+      <button class="sb-item" onclick="switchPanel('account')" id="navAccount">
+        <span class="sb-ic">👤</span> アカウント
+      </button>
+      <button class="sb-item" onclick="switchPanel('security')" id="navSecurity">
+        <span class="sb-ic">🔒</span> セキュリティ
+      </button>
+      <button class="sb-item" onclick="switchPanel('payment')" id="navPayment">
+        <span class="sb-ic">💳</span> 支払い設定
+      </button>
+      <button class="sb-item" onclick="switchPanel('filter')" id="navFilter">
+        <span class="sb-ic">🔞</span> 年齢フィルター
+      </button>
+    </div>
+
+    <div class="sb-footer">
+      <button class="btn-logout" onclick="confirmLogout()">
+        <span>→</span> ログアウト
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <div class="panel active" id="panelOverview">
+      <div class="panel-title">🏠 マイページ</div>
+      <div class="panel-sub">ようこそ、<strong id="overviewName">—</strong> さん。あなたのゲームライフを管理しましょう。</div>
+
+      <div class="overview-grid">
+        <div class="ov-card">
+          <div class="ov-val c" id="ovWlCount">0</div>
+          <div class="ov-lbl">ウィッシュリスト</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-val g" id="ovHistCount">0</div>
+          <div class="ov-lbl">閲覧済みゲーム</div>
+        </div>
+        <div class="ov-card">
+          <div class="ov-val r" id="ovAge">全年齢</div>
+          <div class="ov-lbl">年齢フィルター</div>
+        </div>
+      </div>
+
+      <div class="recent-label">最近見たゲーム</div>
+      <div class="recent-row" id="recentRow">
+        <div style="color:var(--muted);font-size:13px;padding:20px 0">まだ閲覧履歴がありません</div>
+      </div>
+    </div>
+
+    <!-- ═══ WISHLIST ═══ -->
+    <div class="panel" id="panelWishlist">
+      <div class="panel-title">♡ ウィッシュリスト</div>
+      <div class="panel-sub">気になるゲームをまとめて管理できます。</div>
+      <div class="wl-toolbar">
+        <span class="wl-count" id="wlCountTxt">0件</span>
+      </div>
+      <div class="wl-grid" id="wlGrid"></div>
+    </div>
+
+    <!-- ═══ HISTORY ═══ -->
+    <div class="panel" id="panelHistory">
+      <div class="panel-title">🕐 閲覧履歴</div>
+      <div class="panel-sub">最近閲覧したゲームの一覧です。</div>
+      <div class="hist-toolbar">
+        <button class="btn-clear-hist" onclick="confirmClearHistory()">履歴を全て削除</button>
+      </div>
+      <div class="hist-list" id="histList"></div>
+    </div>
+
+    <!-- ═══ ACCOUNT ═══ -->
+    <div class="panel" id="panelAccount">
+      <div class="panel-title">👤 アカウント設定</div>
+      <div class="panel-sub">プロフィール情報を管理します。</div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">📝 プロフィール</div>
+
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">表示名</div>
+            <div class="sb-row-desc">ストア上で表示される名前です</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <div class="inline-edit-wrap">
+              <div class="ie-val">
+                <span id="dispName">—</span>
+                <span class="ie-edit-btn" onclick="toggleEdit('name')">編集</span>
+              </div>
+              <div class="ie-form" id="editName">
+                <input class="ie-inp" id="inpName" type="text" placeholder="表示名">
+                <div class="ie-actions">
+                  <button class="btn-save" onclick="saveField('name')">保存</button>
+                  <button class="btn-cancel-edit" onclick="toggleEdit('name')">キャンセル</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">メールアドレス</div>
+            <div class="sb-row-desc">ログインに使用するアドレスです</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <div class="inline-edit-wrap">
+              <div class="ie-val">
+                <span id="dispEmail">—</span>
+                <span class="ie-edit-btn" onclick="toggleEdit('email')">編集</span>
+              </div>
+              <div class="ie-form" id="editEmail">
+                <input class="ie-inp" id="inpEmail" type="email" placeholder="メールアドレス">
+                <div class="ie-actions">
+                  <button class="btn-save" onclick="saveField('email')">保存</button>
+                  <button class="btn-cancel-edit" onclick="toggleEdit('email')">キャンセル</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">アカウントの種類</div>
+            <div class="sb-row-desc">プレイヤー：ゲームを楽しむ / 配信者：ライブ配信機能を使う</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <div style="display:flex;gap:6px">
+              <button id="rolePlayer" onclick="setRole('player')" style="padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;border:1px solid var(--border);background:transparent;color:var(--muted)">🎮 プレイヤー</button>
+              <button id="roleStreamer" onclick="setRole('streamer')" style="padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;border:1px solid var(--border);background:transparent;color:var(--muted)">📡 配信者</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🔔 通知設定</div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">新着ゲームの通知</div>
+            <div class="sb-row-desc">ウィッシュリストのゲームが更新された際に通知します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="notifNew" checked><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">セール通知</div>
+            <div class="sb-row-desc">ウィッシュリストのゲームが値下げされた際に通知します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="notifSale" checked><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">配信開始通知</div>
+            <div class="sb-row-desc">お気に入りの配信者がライブを始めた際に通知します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="notifLive"><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-save-section" onclick="saveAccount()">設定を保存</button>
+
+      <div class="danger-zone">
+        <div class="dz-title">⚠ 危険な操作</div>
+        <div class="dz-row">
+          <div class="dz-desc">アカウントを削除すると、購入履歴・ウィッシュリストなど全てのデータが完全に消去されます。この操作は取り消せません。</div>
+          <button class="btn-danger" onclick="confirmDeleteAccount()">アカウントを削除</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECURITY ═══ -->
+    <div class="panel" id="panelSecurity">
+      <div class="panel-title">🔒 セキュリティ</div>
+      <div class="panel-sub">パスワードとログインの安全性を管理します。</div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🔑 パスワード変更</div>
+        <div class="sb-row" style="flex-direction:column;align-items:stretch;gap:12px">
+          <div class="field" style="max-width:360px">
+            <div class="sb-row-label" style="font-size:12px;color:var(--muted);margin-bottom:6px">現在のパスワード</div>
+            <div class="pw-wrap">
+              <input class="ie-inp" id="pwCurrent" type="password" placeholder="現在のパスワード" style="max-width:100%;width:100%">
+              <button class="pw-eye" onclick="togglePwField('pwCurrent',this)">👁</button>
+            </div>
+          </div>
+          <div class="field" style="max-width:360px">
+            <div class="sb-row-label" style="font-size:12px;color:var(--muted);margin-bottom:6px">新しいパスワード</div>
+            <div class="pw-wrap">
+              <input class="ie-inp" id="pwNew" type="password" placeholder="8文字以上" style="max-width:100%;width:100%" oninput="checkStrength(this.value)">
+              <button class="pw-eye" onclick="togglePwField('pwNew',this)">👁</button>
+            </div>
+            <div class="pw-strength">
+              <div class="pw-seg" id="ps1"></div><div class="pw-seg" id="ps2"></div><div class="pw-seg" id="ps3"></div>
+            </div>
+            <div class="pw-strength-lbl" id="psLbl"></div>
+          </div>
+          <div class="field" style="max-width:360px">
+            <div class="sb-row-label" style="font-size:12px;color:var(--muted);margin-bottom:6px">新しいパスワード（確認）</div>
+            <div class="pw-wrap">
+              <input class="ie-inp" id="pwConfirm" type="password" placeholder="もう一度入力" style="max-width:100%;width:100%">
+              <button class="pw-eye" onclick="togglePwField('pwConfirm',this)">👁</button>
+            </div>
+          </div>
+          <button class="btn-save-section" style="max-width:360px" onclick="changePassword()">パスワードを変更</button>
+        </div>
+      </div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🛡 ログインセキュリティ</div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">2段階認証</div>
+            <div class="sb-row-desc">ログイン時に確認コードを要求します（推奨）</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="twoFactor"><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">ログイン履歴</div>
+            <div class="sb-row-desc">最終ログイン: <span id="lastLogin" style="color:var(--text)">—</span></div>
+          </div>
+          <div class="sb-row-ctrl">
+            <button class="btn-cancel-edit" onclick="toast('セッション管理機能は近日公開予定です')">全てログアウト</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🔗 連携アカウント</div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label" style="display:flex;align-items:center;gap:8px">
+              <span>🎵</span> TikTok
+            </div>
+            <div class="sb-row-desc" id="tiktokLinkStatus">未連携</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <button class="btn-cancel-edit" id="tiktokLinkBtn" onclick="linkSocial('tiktok')">連携する</button>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label" style="display:flex;align-items:center;gap:8px">
+              <span>🔵</span> Google
+            </div>
+            <div class="sb-row-desc" id="googleLinkStatus">未連携</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <button class="btn-cancel-edit" onclick="linkSocial('google')">連携する</button>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label" style="display:flex;align-items:center;gap:8px">
+              <span>💬</span> Discord
+            </div>
+            <div class="sb-row-desc">未連携</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <button class="btn-cancel-edit" onclick="linkSocial('discord')">連携する</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PAYMENT ═══ -->
+    <div class="panel" id="panelPayment">
+      <div class="panel-title">💳 支払い設定</div>
+      <div class="panel-sub">支払い方法を管理します。カード情報は暗号化して安全に保管されます。</div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">💳 登録済み支払い方法</div>
+        <div style="padding:14px 16px">
+          <div class="payment-methods" id="paymentMethods">
+            <!-- JS生成 -->
+          </div>
+          <button class="btn-add-payment" onclick="toast('決済システム連携は本番環境で設定されます（Stripe等）')">
+            ＋ 支払い方法を追加
+          </button>
+          <div class="payment-note">
+            <span class="payment-note-icon">🔒</span>
+            <span>カード番号などの決済情報はStripe等の決済プロバイダーに安全に保管されます。NEXUS GAMESのサーバーには保存されません。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🧾 購入設定</div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">購入確認</div>
+            <div class="sb-row-desc">購入前に確認ダイアログを表示します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="purchaseConfirm" checked><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">領収書をメールで受け取る</div>
+            <div class="sb-row-desc">購入完了後にメールで領収書を送信します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="receiptEmail" checked><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ AGE FILTER ═══ -->
+    <div class="panel" id="panelFilter">
+      <div class="panel-title">🔞 年齢フィルター</div>
+      <div class="panel-sub">表示するゲームのレーティングを設定します。お子様が利用する場合は「全年齢」を推奨します。</div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🎮 表示するレーティング</div>
+        <div style="padding:16px 18px">
+          <div class="age-select" id="ageSelect">
+
+            <div class="age-opt selected" onclick="setAge('all')" data-age="all">
+              <div class="age-dot"></div>
+              <div class="age-opt-info">
+                <div class="age-opt-label">全年齢</div>
+                <div class="age-opt-desc">全てのレーティングのゲームを表示します。暴力・性的表現を含む場合があります。</div>
+              </div>
+              <span class="age-badge all">全年齢</span>
+            </div>
+
+            <div class="age-opt" onclick="setAge('15')" data-age="15">
+              <div class="age-dot"></div>
+              <div class="age-opt-info">
+                <div class="age-opt-label">15歳以上（CERO C相当）</div>
+                <div class="age-opt-desc">軽度の暴力・恋愛表現を含むゲームを非表示にします。</div>
+              </div>
+              <span class="age-badge t15">15+</span>
+            </div>
+
+            <div class="age-opt" onclick="setAge('18')" data-age="18">
+              <div class="age-dot"></div>
+              <div class="age-opt-info">
+                <div class="age-opt-label">18歳以上のみ（CERO D/Z相当）</div>
+                <div class="age-opt-desc">成人向けコンテンツを含むゲームを非表示にします。18歳未満の方にはこの設定を推奨します。</div>
+              </div>
+              <span class="age-badge t18">18+</span>
+            </div>
+
+          </div>
+
+          <div style="margin-top:18px;padding:12px 14px;background:rgba(255,193,7,.05);border:1px solid rgba(255,193,7,.15);border-radius:8px;font-size:11px;color:var(--muted);line-height:1.8">
+            ⚠️ 年齢フィルターはゲームの表示を制限しますが、完全なペアレンタルコントロールではありません。
+            お子様の利用環境では保護者の管理をあわせてご利用ください。
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-block">
+        <div class="sb-block-title">🔍 検索フィルター</div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">成人向けタグのゲームを非表示</div>
+            <div class="sb-row-desc">「アダルト」「18+」等のタグが付いたゲームを検索結果から除外します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="filterAdult" checked><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+        <div class="sb-row">
+          <div class="sb-row-info">
+            <div class="sb-row-label">暴力・ホラー表現を含むゲームを隠す</div>
+            <div class="sb-row-desc">強い暴力描写・ホラーコンテンツを含むゲームの表示を制限します</div>
+          </div>
+          <div class="sb-row-ctrl">
+            <label class="toggle"><input type="checkbox" id="filterViolence"><div class="tg-track"></div><div class="tg-thumb"></div></label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-save-section" onclick="saveFilter()">年齢設定を保存</button>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════ MODAL ══════════ -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">確認</div>
+    <div class="modal-body"  id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-modal-ok"     id="modalOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════ SCRIPT ══════════ -->
+<script>
+// ════════════════════════════════════════════
+// STORAGE KEYS
+// ════════════════════════════════════════════
+const KEY_USER    = 'nexus_user';
+const KEY_PROFILE = 'nexus_profile';
+const KEY_WL      = 'nexus_wishlist';
+const KEY_HIST    = 'nexus_history';
+const KEY_PREFS   = 'nexus_prefs';
+const KEY_GAMES   = 'nexus_games_db';
+
+// ════════════════════════════════════════════
+// GAME DB
+// ════════════════════════════════════════════
+const GAME_DEFAULTS = [
+  {id:'cyber-assault',title:'CYBER ASSAULT: ZERO DAY',emoji:'🎮',bg:'linear-gradient(135deg,#050010,#1a0040)',price:'¥4,980',isFree:false,genre:'RPG・アクション'},
+  {id:'dragon-realm', title:'DRAGON REALM Online',    emoji:'⚔️',bg:'linear-gradient(135deg,#001a05,#003010)',price:'¥5,280',isFree:false,genre:'MMORPG'},
+  {id:'inferno-racing',title:'INFERNO RACING GT',     emoji:'🔥',bg:'linear-gradient(135deg,#200a00,#401500)',price:'¥3,480',isFree:false,genre:'レーシング'},
+  {id:'void-explorers',title:'VOID EXPLORERS: Alpha', emoji:'🚀',bg:'linear-gradient(135deg,#001520,#002840)',price:'¥2,980',isFree:false,genre:'SF・探索'},
+  {id:'thunderstrike', title:'THUNDERSTRIKE ARENA',   emoji:'⚡',bg:'linear-gradient(135deg,#1a0800,#2a1000)',price:'無料',   isFree:true, genre:'eスポーツ'},
+  {id:'shadow-hunters',title:'SHADOW HUNTERS',        emoji:'🏹',bg:'linear-gradient(135deg,#0a1a00,#152a00)',price:'¥3,780',isFree:false,genre:'アクション'},
+  {id:'galaxy-breach', title:'GALAXY BREACH 2',       emoji:'🌌',bg:'linear-gradient(135deg,#10001a,#20003a)',price:'¥3,980',isFree:false,genre:'シューター'},
+  {id:'mech-uprising', title:'MECH UPRISING',         emoji:'🤖',bg:'linear-gradient(135deg,#001018,#001e28)',price:'¥4,480',isFree:false,genre:'メカアクション'},
+];
+function getGame(id) {
+  try { const db=JSON.parse(localStorage.getItem(KEY_GAMES)||'[]'); const g=db.find(x=>x.id===id); if(g) return g; } catch(e){}
+  return GAME_DEFAULTS.find(x=>x.id===id);
+}
+
+// ════════════════════════════════════════════
+// LOAD USER
+// ════════════════════════════════════════════
+let USER    = null;
+let PROFILE = {};
+let PREFS   = {};
+
+function init() {
+  // セッション確認
+  try { USER = JSON.parse(sessionStorage.getItem(KEY_USER)); } catch(e){}
+  if (!USER) {
+    // デモユーザー（未ログイン時）
+    USER = { name: 'デモユーザー', email: 'demo@nexusgames.jp', role: 'player', avatar: '🎮', authMethod: 'demo' };
+  }
+
+  // プロフィール（localStorage に保存）
+  try { PROFILE = JSON.parse(localStorage.getItem(KEY_PROFILE)) || {}; } catch(e){ PROFILE = {}; }
+  PROFILE.name  = PROFILE.name  || USER.name;
+  PROFILE.email = PROFILE.email || USER.email;
+  PROFILE.role  = PROFILE.role  || USER.role  || 'player';
+  PROFILE.avatar = PROFILE.avatar || USER.avatar || '🎮';
+
+  // 設定
+  try { PREFS = JSON.parse(localStorage.getItem(KEY_PREFS)) || {}; } catch(e){ PREFS = {}; }
+  PREFS.age = PREFS.age || 'all';
+
+  renderHeader();
+  renderOverview();
+  renderWishlist();
+  renderHistory();
+  renderAccount();
+  renderFilter();
+  renderPayment();
+}
+
+function saveProfile() { localStorage.setItem(KEY_PROFILE, JSON.stringify(PROFILE)); }
+function savePrefs()   { localStorage.setItem(KEY_PREFS,   JSON.stringify(PREFS));   }
+
+// ════════════════════════════════════════════
+// RENDER HEADER & SIDEBAR
+// ════════════════════════════════════════════
+function renderHeader() {
+  const av = PROFILE.avatar.length <= 2 ? PROFILE.avatar : '🎮';
+  document.getElementById('navAvatar').textContent = av;
+  document.getElementById('navName').textContent   = PROFILE.name;
+  document.getElementById('navRole').textContent   = PROFILE.role === 'streamer' ? '配信者' : 'プレイヤー';
+
+  document.getElementById('sbAvatar').firstChild.textContent = av;
+  document.getElementById('sbName').textContent   = PROFILE.name;
+  document.getElementById('sbHandle').textContent = '@' + (USER.tiktokUsername || PROFILE.name.toLowerCase().replace(/\s/g,'_'));
+
+  const chip = document.getElementById('sbRoleChip');
+  chip.textContent = PROFILE.role === 'streamer' ? '📡 配信者' : '🎮 プレイヤー';
+  chip.className   = 'sb-role-chip ' + (PROFILE.role === 'streamer' ? 'streamer' : 'player');
+}
+
+// ════════════════════════════════════════════
+// OVERVIEW
+// ════════════════════════════════════════════
+function renderOverview() {
+  const wl   = getWishlist();
+  const hist = getHistory();
+  const ageMap = { all:'全年齢', '15':'15歳以上', '18':'18歳以上のみ' };
+
+  document.getElementById('overviewName').textContent = PROFILE.name;
+  document.getElementById('ovWlCount').textContent    = wl.length;
+  document.getElementById('ovHistCount').textContent  = hist.length;
+  document.getElementById('ovAge').textContent        = ageMap[PREFS.age] || '全年齢';
+
+  // WL badge
+  const badge = document.getElementById('wlBadge');
+  if (wl.length > 0) { badge.textContent = wl.length; badge.style.display = ''; }
+  else { badge.style.display = 'none'; }
+
+  // Recent 5
+  const row = document.getElementById('recentRow');
+  const recent = hist.slice(0,5);
+  if (!recent.length) { row.innerHTML='<div style="color:var(--muted);font-size:13px;padding:20px 0">まだ閲覧履歴がありません</div>'; return; }
+  row.innerHTML = recent.map(h => {
+    const g = getGame(h.id) || h;
+    return `<div class="recent-card" onclick="goToGame('${h.id}')">
+      <div class="rc-art" style="background:${g.bg||'var(--card)'}">${g.emoji||'🎮'}</div>
+      <div class="rc-name">${g.title||h.title}</div>
+      <div class="rc-time">${relTime(h.at)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+// WISHLIST
+// ════════════════════════════════════════════
+function getWishlist() { try { return JSON.parse(localStorage.getItem(KEY_WL)) || []; } catch(e){ return []; } }
+function saveWishlist(wl) { localStorage.setItem(KEY_WL, JSON.stringify(wl)); }
+function inWishlist(id) { return getWishlist().some(x=>x.id===id); }
+
+function toggleWishlist(id) {
+  let wl = getWishlist();
+  if (wl.some(x=>x.id===id)) {
+    wl = wl.filter(x=>x.id!==id);
+    toast('ウィッシュリストから削除しました');
+  } else {
+    const g = getGame(id);
+    if (g) wl.unshift({ id, title:g.title, emoji:g.emoji, bg:g.bg, price:g.price, isFree:g.isFree, genre:g.genre, addedAt:Date.now() });
+    toast('♡ ウィッシュリストに追加しました', 'ok');
+  }
+  saveWishlist(wl);
+  renderWishlist();
+  renderOverview();
+}
+
+function renderWishlist() {
+  const wl = getWishlist();
+  document.getElementById('wlCountTxt').textContent = wl.length + '件';
+  const grid = document.getElementById('wlGrid');
+  if (!wl.length) {
+    grid.innerHTML = `<div class="wl-empty" style="grid-column:1/-1">
+      <div class="wl-empty-icon">♡</div>
+      <p>ウィッシュリストは空です。<br>気になるゲームを見つけたら♡ボタンで追加できます。</p>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = wl.map(g => `
+    <div class="wl-card">
+      <div class="wl-art" style="background:${g.bg||'var(--card)'}">
+        ${g.emoji||'🎮'}
+        <button class="wl-remove" onclick="event.stopPropagation();toggleWishlist('${g.id}')" title="削除">✕</button>
+      </div>
+      <div class="wl-body">
+        <div class="wl-name">${g.title}</div>
+        <div class="wl-genre">${g.genre}</div>
+        <div class="wl-foot">
+          <span class="wl-price ${g.isFree?'free':'paid'}">${g.price}</span>
+          <button class="btn-wl-play" onclick="goToGame('${g.id}')">${g.isFree?'▶ 無料':'購入'}</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('wlBadge').textContent = wl.length;
+  document.getElementById('wlBadge').style.display = wl.length ? '' : 'none';
+}
+
+// ════════════════════════════════════════════
+// HISTORY
+// ════════════════════════════════════════════
+function getHistory() { try { return JSON.parse(localStorage.getItem(KEY_HIST)) || []; } catch(e){ return []; } }
+function saveHistory(h) { localStorage.setItem(KEY_HIST, JSON.stringify(h)); }
+
+function addHistory(id) {
+  let hist = getHistory().filter(x=>x.id!==id);
+  const g = getGame(id);
+  if (!g) return;
+  hist.unshift({ id, title:g.title, emoji:g.emoji, bg:g.bg, genre:g.genre, at:Date.now() });
+  if (hist.length > 50) hist = hist.slice(0,50);
+  saveHistory(hist);
+}
+
+function renderHistory() {
+  const hist = getHistory();
+  const list = document.getElementById('histList');
+  if (!hist.length) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:32px;text-align:center">閲覧履歴がありません</div>';
+    return;
+  }
+  list.innerHTML = hist.map(h => {
+    const g = getGame(h.id) || h;
+    const isWL = inWishlist(h.id);
+    return `<div class="hist-item">
+      <div class="hist-art" style="background:${g.bg||'var(--card)'}">${g.emoji||'🎮'}</div>
+      <div class="hist-info">
+        <div class="hist-name">${g.title||h.title}</div>
+        <div class="hist-meta">${g.genre||''}</div>
+      </div>
+      <div class="hist-time">${relTime(h.at)}</div>
+      <div class="hist-actions">
+        <button class="hist-btn wl${isWL?' on':''}" onclick="toggleWishlist('${h.id}');renderHistory()" style="${isWL?'background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.3)':''}">
+          ${isWL?'♥ 済':'♡ 追加'}
+        </button>
+        <button class="hist-btn" onclick="goToGame('${h.id}')">詳細</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearHistory() {
+  saveHistory([]);
+  renderHistory();
+  renderOverview();
+  toast('閲覧履歴を削除しました');
+}
+
+// ════════════════════════════════════════════
+// ACCOUNT
+// ════════════════════════════════════════════
+function renderAccount() {
+  document.getElementById('dispName').textContent  = PROFILE.name;
+  document.getElementById('dispEmail').textContent = PROFILE.email;
+  document.getElementById('inpName').value  = PROFILE.name;
+  document.getElementById('inpEmail').value = PROFILE.email;
+  updateRoleButtons(PROFILE.role);
+  document.getElementById('lastLogin').textContent = new Date().toLocaleString('ja-JP');
+
+  if (USER.authMethod === 'tiktok' || USER.tiktokUsername) {
+    document.getElementById('tiktokLinkStatus').textContent = `@${USER.tiktokUsername} と連携済み`;
+    document.getElementById('tiktokLinkBtn').textContent = '連携解除';
+  }
+}
+
+function toggleEdit(field) {
+  const form = document.getElementById('edit' + field.charAt(0).toUpperCase() + field.slice(1));
+  const isOpen = form.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.ie-form').forEach(f=>f.classList.remove('open'));
+  if (!isOpen) form.classList.add('open');
+}
+
+function saveField(field) {
+  if (field === 'name') {
+    const val = document.getElementById('inpName').value.trim();
+    if (!val) { toast('表示名を入力してください', 'err'); return; }
+    PROFILE.name = val;
+  } else if (field === 'email') {
+    const val = document.getElementById('inpEmail').value.trim();
+    if (!val || !val.includes('@')) { toast('正しいメールアドレスを入力してください', 'err'); return; }
+    PROFILE.email = val;
+  }
+  saveProfile();
+  toggleEdit(field);
+  renderAccount();
+  renderHeader();
+  toast('保存しました ✓', 'ok');
+}
+
+function setRole(role) {
+  PROFILE.role = role;
+  updateRoleButtons(role);
+}
+function updateRoleButtons(role) {
+  const p=document.getElementById('rolePlayer'), s=document.getElementById('roleStreamer');
+  if (!p||!s) return;
+  const on='background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.3);color:var(--accent)';
+  const off='background:transparent;border:1px solid var(--border);color:var(--muted)';
+  p.style.cssText=`padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;${role==='player'?on:off}`;
+  s.style.cssText=`padding:6px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;${role==='streamer'?on:off}`;
+}
+
+function saveAccount() {
+  const notifs = {
+    new:  document.getElementById('notifNew').checked,
+    sale: document.getElementById('notifSale').checked,
+    live: document.getElementById('notifLive').checked,
+  };
+  PROFILE.notifs = notifs;
+  saveProfile();
+  renderHeader();
+  toast('アカウント設定を保存しました ✓', 'ok');
+}
+
+function linkSocial(platform) {
+  toast(`${platform} 連携はサーバー起動後に利用できます`);
+}
+
+// ════════════════════════════════════════════
+// SECURITY
+// ════════════════════════════════════════════
+function togglePwField(id, btn) {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function checkStrength(pw) {
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+  const segs = [document.getElementById('ps1'), document.getElementById('ps2'), document.getElementById('ps3')];
+  const lbl  = document.getElementById('psLbl');
+  segs.forEach(s => { s.className = 'pw-seg'; });
+
+  if (score <= 1) { segs[0].classList.add('weak'); lbl.textContent='弱い'; lbl.className='pw-strength-lbl weak'; }
+  else if (score <= 2) { segs[0].classList.add('medium');segs[1].classList.add('medium'); lbl.textContent='普通'; lbl.className='pw-strength-lbl medium'; }
+  else { segs.forEach(s=>s.classList.add('strong')); lbl.textContent='強い'; lbl.className='pw-strength-lbl strong'; }
+}
+
+function changePassword() {
+  const cur  = document.getElementById('pwCurrent').value;
+  const nw   = document.getElementById('pwNew').value;
+  const conf = document.getElementById('pwConfirm').value;
+  if (!cur)  { toast('現在のパスワードを入力してください', 'err'); return; }
+  if (nw.length < 8) { toast('新しいパスワードは8文字以上にしてください', 'err'); return; }
+  if (nw !== conf)   { toast('パスワードが一致しません', 'err'); return; }
+  // API call would go here
+  document.getElementById('pwCurrent').value = '';
+  document.getElementById('pwNew').value = '';
+  document.getElementById('pwConfirm').value = '';
+  document.querySelectorAll('.pw-seg').forEach(s=>s.className='pw-seg');
+  document.getElementById('psLbl').textContent = '';
+  toast('パスワードを変更しました ✓', 'ok');
+}
+
+// ════════════════════════════════════════════
+// PAYMENT
+// ════════════════════════════════════════════
+function renderPayment() {
+  const methods = PROFILE.paymentMethods || [];
+  const el = document.getElementById('paymentMethods');
+  if (!methods.length) {
+    el.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:8px 0">登録済みの支払い方法がありません</div>`;
+    return;
+  }
+  el.innerHTML = methods.map((m,i) => `
+    <div class="pm-card">
+      <div class="pm-icon">${m.icon}</div>
+      <div class="pm-info">
+        <div class="pm-name">${m.name}</div>
+        <div class="pm-detail">${m.detail}</div>
+      </div>
+      ${i===0 ? '<span class="pm-default">デフォルト</span>' : ''}
+      <button class="pm-delete" onclick="removePayment(${i})">削除</button>
+    </div>`).join('');
+}
+
+function removePayment(i) {
+  showModal('支払い方法を削除', 'この支払い方法を削除してもよいですか？', ()=>{
+    PROFILE.paymentMethods = (PROFILE.paymentMethods||[]).filter((_,j)=>j!==i);
+    saveProfile(); renderPayment(); toast('削除しました');
+  });
+}
+
+// ════════════════════════════════════════════
+// AGE FILTER
+// ════════════════════════════════════════════
+function setAge(val) {
+  PREFS.age = val;
+  document.querySelectorAll('.age-opt').forEach(opt => {
+    opt.classList.toggle('selected', opt.dataset.age === val);
+  });
+}
+
+function renderFilter() {
+  setAge(PREFS.age || 'all');
+  document.getElementById('filterAdult').checked   = PREFS.filterAdult !== false;
+  document.getElementById('filterViolence').checked = !!PREFS.filterViolence;
+}
+
+function saveFilter() {
+  PREFS.filterAdult    = document.getElementById('filterAdult').checked;
+  PREFS.filterViolence = document.getElementById('filterViolence').checked;
+  savePrefs();
+  renderOverview();
+  toast('年齢フィルターを保存しました ✓', 'ok');
+}
+
+// ════════════════════════════════════════════
+// PANEL SWITCH
+// ════════════════════════════════════════════
+function switchPanel(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+
+  document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
+  const navBtn = document.getElementById('nav' + id.charAt(0).toUpperCase() + id.slice(1));
+  if (navBtn) navBtn.classList.add('active');
+
+  if (id==='wishlist') renderWishlist();
+  if (id==='history')  renderHistory();
+  if (id==='overview') renderOverview();
+}
+
+// ════════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════════
+let modalCb = null;
+function showModal(title, body, cb) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').textContent  = body;
+  modalCb = cb;
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modalOk').onclick = ()=>{ closeModal(); if(modalCb) modalCb(); };
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); modalCb = null; }
+
+function confirmClearHistory() { showModal('履歴を削除', 'すべての閲覧履歴を削除しますか？この操作は元に戻せません。', clearHistory); }
+function confirmLogout()        { showModal('ログアウト', 'ログアウトしてもよいですか？', ()=>{ sessionStorage.removeItem(KEY_USER); location.href='portal_index.html'; }); }
+function confirmDeleteAccount() { showModal('アカウント削除', '本当にアカウントを削除しますか？この操作は取り消せません。すべてのデータが消去されます。', ()=>{ sessionStorage.clear(); localStorage.removeItem(KEY_PROFILE); localStorage.removeItem(KEY_WL); localStorage.removeItem(KEY_HIST); localStorage.removeItem(KEY_PREFS); toast('アカウントを削除しました'); setTimeout(()=>location.href='portal_index.html',1500); }); }
+
+// ════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════
+function goToGame(id) { location.href = 'portal_index.html'; }
+
+function relTime(ts) {
+  const diff = Date.now() - ts;
+  const min  = Math.floor(diff/60000);
+  const hr   = Math.floor(diff/3600000);
+  const day  = Math.floor(diff/86400000);
+  if (min < 1)   return 'たった今';
+  if (min < 60)  return min + '分前';
+  if (hr  < 24)  return hr  + '時間前';
+  if (day < 7)   return day + '日前';
+  return new Date(ts).toLocaleDateString('ja-JP');
+}
+
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast on' + (type?' '+type:'');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('on'), 2600);
+}
+
+// ════════════════════════════════════════════
+// DEMO DATA (for preview)
+// ════════════════════════════════════════════
+function seedDemoData() {
+  // ウィッシュリスト
+  if (!localStorage.getItem(KEY_WL)) {
+    const wl = [
+      { id:'cyber-assault', title:'CYBER ASSAULT: ZERO DAY', emoji:'🎮', bg:'linear-gradient(135deg,#050010,#1a0040)', price:'¥4,980', isFree:false, genre:'RPG・アクション', addedAt:Date.now()-86400000 },
+      { id:'thunderstrike',  title:'THUNDERSTRIKE ARENA',    emoji:'⚡', bg:'linear-gradient(135deg,#1a0800,#2a1000)', price:'無料',   isFree:true,  genre:'eスポーツ',      addedAt:Date.now()-3600000  },
+      { id:'dragon-realm',   title:'DRAGON REALM Online',    emoji:'⚔️', bg:'linear-gradient(135deg,#001a05,#003010)', price:'¥5,280', isFree:false, genre:'MMORPG',          addedAt:Date.now()-7200000  },
+    ];
+    saveWishlist(wl);
+  }
+  // 閲覧履歴
+  if (!localStorage.getItem(KEY_HIST)) {
+    const hist = [
+      { id:'shadow-hunters', title:'SHADOW HUNTERS',     emoji:'🏹', bg:'linear-gradient(135deg,#0a1a00,#152a00)', genre:'アクション',     at:Date.now()-1800000   },
+      { id:'galaxy-breach',  title:'GALAXY BREACH 2',    emoji:'🌌', bg:'linear-gradient(135deg,#10001a,#20003a)', genre:'シューター',     at:Date.now()-7200000   },
+      { id:'mech-uprising',  title:'MECH UPRISING',      emoji:'🤖', bg:'linear-gradient(135deg,#001018,#001e28)', genre:'メカアクション', at:Date.now()-86400000  },
+      { id:'inferno-racing', title:'INFERNO RACING GT',  emoji:'🔥', bg:'linear-gradient(135deg,#200a00,#401500)', genre:'レーシング',     at:Date.now()-172800000 },
+      { id:'void-explorers', title:'VOID EXPLORERS',     emoji:'🚀', bg:'linear-gradient(135deg,#001520,#002840)', genre:'SF・探索',       at:Date.now()-259200000 },
+    ];
+    saveHistory(hist);
+  }
+  // 支払い方法
+  if (!PROFILE.paymentMethods) {
+    PROFILE.paymentMethods = [{ icon:'💳', name:'Visa（デモ）', detail:'**** **** **** 4242' }];
+    saveProfile();
+  }
+}
+
+// ════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════
+init();
+seedDemoData();
+
+// Re-render after seed
+renderWishlist();
+renderHistory();
+renderOverview();
+renderPayment();
+</script>
+</body>
+</html>
